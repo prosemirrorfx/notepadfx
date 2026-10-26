@@ -1,0 +1,14 @@
+target/
+shade/
+dist/
+prp/
+CLAUDE.md
+.claude/
+credentials.json
+*.key
+*.pem
+*.p12
+*.log
+*.jar
+nbactions.xml
+nb-configuration.xml
