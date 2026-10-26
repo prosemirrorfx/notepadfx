@@ -2,7 +2,7 @@
 
 A fast markdown and text editor for the desktop, in JavaFX.
 
-![notepadfx 0.1.2: workspaces, projects and files on the left, vertical tabs, the markdown editor with folding and source line numbers, the outline on the right](docs/screenshots/notepadfx-0.1.2.png)
+![notepadfx 0.1.2: workspaces, projects and files on the left, vertical tabs, the markdown editor with folding and line numbers, the outline on the right](docs/screenshots/notepadfx-0.1.2.png)
 
 *Screenshot of notepadfx 0.1.2, taken 2026-10-26. When the app looks different from this, take a new one and name it after the version shown.*
 
