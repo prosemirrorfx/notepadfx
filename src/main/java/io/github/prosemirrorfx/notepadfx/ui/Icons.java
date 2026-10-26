@@ -1,19 +1,40 @@
 package io.github.prosemirrorfx.notepadfx.ui;
 
+import io.github.prosemirrorfx.notepadfx.sys.Home;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 import java.util.List;
 import javax.imageio.ImageIO;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 final class Icons {
+    static final List<Integer> SIZES = List.of(16, 24, 32, 48, 64, 256);
+    static final Path CACHE = Home.dir().resolve("cache");
     static List<Image> cached;
 
-    static List<Image> window() {
-        if (cached == null) cached = List.of(16, 24, 32, 48, 64, 256).stream().map(Icons::draw).toList();
-        return cached;
+    static void apply(Stage stage) {
+        if (cached == null) cached = fromCache();
+        if (cached != null) { stage.getIcons().setAll(cached); return; }
+        Thread.ofVirtual().start(() -> {
+            var drawn = SIZES.stream().map(Icons::draw).toList();
+            Platform.runLater(() -> { cached = drawn; Windows.ALL.forEach(w -> w.stage.getIcons().setAll(drawn)); });
+        });
+    }
+
+    static List<Image> fromCache() {
+        var images = new ArrayList<Image>();
+        for (var s : SIZES) {
+            var f = CACHE.resolve("icon-v1-" + s + ".png");
+            if (!Files.exists(f)) return null;
+            try (var in = Files.newInputStream(f)) { images.add(new Image(in)); } catch (IOException e) { return null; }
+        }
+        return images;
     }
 
     static Image draw(int size) {
@@ -39,13 +60,15 @@ final class Icons {
             g.drawLine(272, r[0], 272 + r[1] / 2 + 40, r[0]);
         }
         g.dispose();
-        return png(img);
+        return png(img, size);
     }
 
-    static Image png(BufferedImage img) {
+    static Image png(BufferedImage img, int size) {
         try {
             var bytes = new ByteArrayOutputStream();
             ImageIO.write(img, "png", bytes);
+            Files.createDirectories(CACHE);
+            Files.write(CACHE.resolve("icon-v1-" + size + ".png"), bytes.toByteArray());
             return new Image(new ByteArrayInputStream(bytes.toByteArray()));
         } catch (IOException e) {
             throw new UncheckedIOException(e);

@@ -12,6 +12,7 @@ final class WorkspacePane {
     final NavPanel nav;
     final TreeView<Path> tree = new TreeView<>(new TreeItem<>());
     final VBox node;
+    boolean quiet;
 
     WorkspacePane(MainWindow w, NavPanel nav) {
         this.w = w;
@@ -34,12 +35,17 @@ final class WorkspacePane {
     }
 
     void chosen(TreeItem<Path> item) {
-        if (item == null || item.getValue() == null) return;
+        if (quiet || item == null || item.getValue() == null) return;
         if (item.getParent() == tree.getRoot()) nav.workspaceChosen(item.getValue().toString());
         else Docs.find(item.getValue()).ifPresent(w::show);
     }
 
     void reload() {
+        quiet = true;
+        try { rebuild(); } finally { quiet = false; }
+    }
+
+    void rebuild() {
         var selected = w.state.workspace();
         var roots = tree.getRoot().getChildren();
         roots.clear();

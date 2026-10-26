@@ -4,7 +4,7 @@ import io.github.prosemirrorfx.notepadfx.doc.*;
 import io.github.prosemirrorfx.notepadfx.state.WindowState;
 import java.nio.file.*;
 import java.util.*;
-import io.github.prosemirrorfx.notepadfx.sys.IdleTrim;
+import io.github.prosemirrorfx.notepadfx.sys.*;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.scene.Node;
@@ -45,7 +45,7 @@ public final class MainWindow {
         Keys.install(scene, this);
         scene.addEventFilter(InputEvent.ANY, e -> IdleTrim.touch());
         stage.setScene(scene);
-        stage.getIcons().setAll(Icons.window());
+        Icons.apply(stage);
         applyTheme();
         stage.titleProperty().bind(active.map(d -> d.name() + " - notepadfx").orElse("notepadfx"));
         stage.focusedProperty().subscribe(f -> { if (f) Windows.focused = this; });
@@ -54,11 +54,22 @@ public final class MainWindow {
         restoreGeometry();
         nav.restore();
         for (var f : state.files()) if (Files.isRegularFile(Path.of(f))) tabs.insert(Docs.of(Path.of(f)), -1);
-        if (state.activeFile() != null) Docs.find(Path.of(state.activeFile())).filter(tabs::contains).ifPresent(this::show);
-        if (active.get() == null && !tabs.isEmpty()) show(tabs.docs().getFirst());
+        Timing.mark("window built");
     }
 
-    void show() { stage.show(); }
+    void show() {
+        stage.show();
+        Timing.mark("shown");
+        Platform.runLater(this::restoreActive);
+    }
+
+    void restoreActive() {
+        if (active.get() != null) return;
+        var restored = state.activeFile() == null ? null : Docs.find(Path.of(state.activeFile())).filter(tabs::contains).orElse(null);
+        if (restored == null && !tabs.isEmpty()) restored = tabs.docs().getFirst();
+        if (restored != null) show(restored);
+        Timing.mark("file shown");
+    }
 
     void show(Doc d) {
         if (!tabs.contains(d)) tabs.insert(d, -1);

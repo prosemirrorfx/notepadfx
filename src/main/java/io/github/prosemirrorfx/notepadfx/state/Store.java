@@ -10,7 +10,7 @@ public final class Store {
 
     public static Session load() {
         try {
-            return Files.exists(FILE) ? new Session().fromJson(Files.readString(FILE, UTF_8)) : new Session();
+            return Files.exists(FILE) ? new Session().fromJson(Files.readString(FILE, UTF_8).replaceFirst("^﻿", "")) : new Session();
         } catch (Exception e) {
             System.err.println("notepadfx: session.json unreadable, kept as session.json.bad, starting fresh: " + e);
             try { Files.copy(FILE, FILE.resolveSibling("session.json.bad"), StandardCopyOption.REPLACE_EXISTING); } catch (Exception ignored) {}

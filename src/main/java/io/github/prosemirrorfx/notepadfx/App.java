@@ -17,8 +17,13 @@ public class App extends Application {
 
     @Override
     public void start(Stage ignored) {
+        Timing.mark("fx start");
         Platform.setImplicitExit(false);
-        Windows.start(Store.load(), args);
+        var session = Store.load();
+        Timing.mark("session");
+        Windows.start(session, args);
+        Timing.mark("windows built");
+        Platform.runLater(() -> Timing.mark("first pulse"));
         Instance.serve(a -> Platform.runLater(() -> Windows.handle(a)));
         IdleTrim.start();
     }

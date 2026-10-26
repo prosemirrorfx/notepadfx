@@ -1,10 +1,12 @@
 package io.github.prosemirrorfx.notepadfx;
 
-import io.github.prosemirrorfx.notepadfx.sys.Instance;
+import io.github.prosemirrorfx.notepadfx.sys.*;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        Timing.mark("main");
+        Timing.jvm();
         var list = List.of(args);
         var primary = Instance.primary();
         if (!primary && Instance.handOff(list)) System.exit(0);
