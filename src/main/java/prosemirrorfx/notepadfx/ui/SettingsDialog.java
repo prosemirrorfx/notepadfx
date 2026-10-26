@@ -1,5 +1,6 @@
 package prosemirrorfx.notepadfx.ui;
 
+import prosemirrorfx.notepadfx.sys.*;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -17,6 +18,8 @@ final class SettingsDialog {
         var paras = check("Outline shows paragraphs", s.outlineParagraphs());
         var nav = check("Files panes visible in this window (F7)", w.state.navVisible());
         var toc = check("Outline visible in this window (F8)", w.state.tocVisible());
+        var menuWas = ExplorerMenu.present();
+        var menu = check("\"Open with notepadfx\" in Explorer's right-click menu", menuWas);
 
         var grid = new GridPane(12, 10);
         grid.setPadding(new Insets(16));
@@ -28,6 +31,7 @@ final class SettingsDialog {
         grid.add(paras, 0, 5, 2, 1);
         grid.add(nav, 0, 6, 2, 1);
         grid.add(toc, 0, 7, 2, 1);
+        grid.add(menu, 0, 9, 2, 1);
         var check = new Button("Check for updates");
         check.setMnemonicParsing(false);
         check.setOnAction(e -> Updates.checkNow());
@@ -46,6 +50,7 @@ final class SettingsDialog {
         s.zoom(zoom.getValue() / 100.0).lineNumbers(lines.isSelected())
             .outlineBullets(bullets.isSelected()).outlineParagraphs(paras.isSelected());
         if (themeChanged) Windows.toggleTheme();
+        if (menu.isSelected() != menuWas) { if (menu.isSelected()) ExplorerMenu.add(InstallPath.installedOrRunning()); else ExplorerMenu.remove(); }
         if (nav.isSelected() != w.state.navVisible()) w.toggleNav();
         if (toc.isSelected() != w.state.tocVisible()) w.toggleToc();
         Windows.ALL.forEach(x -> { x.area.reapply(); x.toc.rebuild(); });

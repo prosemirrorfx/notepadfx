@@ -17,7 +17,7 @@ F2 save, F4 close tab, F5 refresh, F6 next pane, F7 files panes, F8 outline, F9 
 
 ## Install and update
 
-Download `notepadfx.exe` from the latest release, then run `notepadfx install`: it goes to your user programs folder, on PATH, with Start Menu and Desktop shortcuts. `notepadfx update` updates it; the app also checks once a day and offers the update in its status bar.
+Download `notepadfx.exe` from the latest release, then run `notepadfx install`: it goes to your user programs folder, on PATH, with Start Menu and Desktop shortcuts. `notepadfx update` updates it; the app also checks once a day and offers the update in its status bar. Install also adds "Open with notepadfx" to Explorer's right-click menu for files and folders; `notepadfx explorer-menu off` (or Settings) removes it.
 
 ## Build
 

@@ -44,7 +44,11 @@ public final class Windows {
     }
 
     public static void open(Path p) {
-        if (Files.isDirectory(p)) { Workspaces.add(p); return; }
+        if (Files.isDirectory(p)) {
+            Workspaces.add(p);
+            target().nav.workspaces.select(p.toAbsolutePath().normalize().toString());
+            return;
+        }
         var doc = Docs.of(p);
         var owner = windowOf(doc);
         (owner != null ? owner : target()).show(doc);
