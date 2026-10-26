@@ -29,7 +29,9 @@ final class TocPane {
         debounce.setOnFinished(e -> rebuild());
         node = Section.pane(Section.header("Outline",
             Section.tool("•", "Show or hide bullets", () -> toggle(true)),
-            Section.tool("¶", "Show or hide paragraphs", () -> toggle(false))), tree);
+            Section.tool("¶", "Show or hide paragraphs", () -> toggle(false)),
+            Section.tool("⊟", "Collapse all", () -> expand(tree.getRoot(), false)),
+            Section.tool("⊞", "Expand all", () -> expand(tree.getRoot(), true))), tree);
         node.setMinWidth(140);
         w.active.subscribe(this::attach);
     }
@@ -76,6 +78,13 @@ final class TocPane {
             item.setExpanded(true);
             add(item, n.children());
             parent.getChildren().add(item);
+        }
+    }
+
+    static void expand(TreeItem<OutlineNode> item, boolean open) {
+        for (var c : item.getChildren()) {
+            c.setExpanded(open);
+            expand(c, open);
         }
     }
 

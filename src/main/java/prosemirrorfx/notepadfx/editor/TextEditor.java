@@ -1,6 +1,6 @@
 package prosemirrorfx.notepadfx.editor;
 
-import java.util.List;
+import java.util.*;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -58,6 +58,11 @@ public final class TextEditor implements Editor {
     @Override public boolean lineNumbersSupported() { return false; }
     @Override public void lineNumbers(boolean on) {}
     @Override public void theme(boolean dark) {}
+    @Override public Set<String> folded() { return Set.of(); }
+    @Override public void folded(Collection<String> keys) {}
+    @Override public ObservableValue<?> foldChanges() { return zoom; }
+    @Override public void collapseAll() {}
+    @Override public void expandAll() {}
     @Override public void focus() { area.requestFocus(); }
 
     @Override

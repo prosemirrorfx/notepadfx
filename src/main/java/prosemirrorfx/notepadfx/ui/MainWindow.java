@@ -169,5 +169,14 @@ public final class MainWindow {
 
     void nextPane() { Focus.next(this); }
 
+    void toggleSource() {
+        var d = active.get();
+        if (d == null || !d.toggleSource()) return;
+        Folds.restore(d);
+        Folds.track(d);
+        active.set(null);
+        active.set(d);
+    }
+
     void tabsEmptied() { active.set(null); }
 }

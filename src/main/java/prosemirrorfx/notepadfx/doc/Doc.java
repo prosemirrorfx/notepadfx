@@ -8,8 +8,10 @@ public final class Doc {
     public final Path path;
     public final BooleanProperty dirty = new SimpleBooleanProperty();
     public final IntegerProperty version = new SimpleIntegerProperty();
+    final BooleanProperty differsFromFile = new SimpleBooleanProperty();
     Editor editor;
     FileText loaded;
+    boolean source;
 
     Doc(Path path) { this.path = path; }
 
@@ -19,6 +21,8 @@ public final class Doc {
         var n = name().toLowerCase();
         return n.endsWith(".md") || n.endsWith(".markdown");
     }
+
+    public boolean source() { return source; }
 
     public String text() { return editor != null ? editor.text() : file().text(); }
 
@@ -30,13 +34,29 @@ public final class Doc {
     }
 
     public Editor editor() {
-        if (editor == null) {
-            editor = markdown() ? new ProseEditor() : new TextEditor();
-            editor.load(file().text());
-            dirty.bind(editor.dirty());
-            editor.onChange(() -> version.set(version.get() + 1));
-        }
+        if (editor == null) attach(markdown() && !source ? new ProseEditor() : new TextEditor(), file().text());
         return editor;
+    }
+
+    void attach(Editor e, String text) {
+        editor = e;
+        editor.load(text);
+        differsFromFile.set(!text.equals(file().text()));
+        dirty.unbind();
+        dirty.bind(editor.dirty().or(differsFromFile));
+        editor.onChange(() -> version.set(version.get() + 1));
+    }
+
+    public boolean toggleSource() {
+        if (!markdown()) return false;
+        var old = editor();
+        var text = old.text();
+        var at = CaretMap.index(old.outline(), old.caret().getValue().intValue());
+        source = !source;
+        attach(source ? new TextEditor() : new ProseEditor(), text);
+        CaretMap.restore(editor, at);
+        version.set(version.get() + 1);
+        return true;
     }
 
     FileText file() {
@@ -48,11 +68,13 @@ public final class Doc {
         var t = text();
         Files.write(path, file().encode(t));
         loaded.text(t);
+        differsFromFile.set(false);
         if (editor != null) editor.markSaved();
     }
 
     public void reload() {
         loaded = FileText.read(path);
+        differsFromFile.set(false);
         if (editor != null) editor.load(loaded.text());
         version.set(version.get() + 1);
     }

@@ -11,6 +11,7 @@ final class Keys {
             var a = e.isShortcutDown() || e.isAltDown() ? null : Action.of(e.getCode());
             if (a == null) a = combo(e);
             if (a != null) { a.run(w); e.consume(); return; }
+            if (e.isShortcutDown() && !e.isShiftDown() && !e.isAltDown() && e.getCode() == E) { w.toggleSource(); e.consume(); return; }
             if (e.isControlDown() && (e.getCode() == TAB || e.getCode() == PAGE_DOWN || e.getCode() == PAGE_UP)) {
                 w.tabs.step(e.isShiftDown() || e.getCode() == PAGE_UP ? -1 : 1);
                 e.consume();

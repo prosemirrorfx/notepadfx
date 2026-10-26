@@ -1,6 +1,6 @@
 package prosemirrorfx.notepadfx.editor;
 
-import java.util.List;
+import java.util.*;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
@@ -40,6 +40,11 @@ public final class ProseEditor implements Editor {
     @Override public ObservableValue<Number> zoomChanges() { return md.view().zoomProperty(); }
     @Override public boolean lineNumbersSupported() { return true; }
     @Override public void lineNumbers(boolean on) { md.view().setLineNumbers(on); }
+    @Override public Set<String> folded() { return md.folded(); }
+    @Override public void folded(Collection<String> keys) { md.setFolded(keys); }
+    @Override public ObservableValue<?> foldChanges() { return md.foldedProperty(); }
+    @Override public void collapseAll() { md.collapseAll(); }
+    @Override public void expandAll() { md.expandAll(); }
     @Override public void theme(boolean dark) { md.view().setTheme(dark ? DARK : LIGHT); }
     @Override public void focus() { md.focus(); }
 

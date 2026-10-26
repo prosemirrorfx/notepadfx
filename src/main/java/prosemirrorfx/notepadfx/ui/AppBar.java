@@ -29,6 +29,9 @@ final class AppBar {
             tool("terminal", "Terminal in this folder", () -> onDoc(d -> Shell.terminal(d.path))),
             tool("open_in_new", "Open in the default app", () -> onDoc(d -> Shell.open(d.path))), sep(),
             tool("remove", "Zoom out", () -> w.area.stepZoom(-1)), zoomLabel, tool("add", "Zoom in", () -> w.area.stepZoom(1)),
+            tool("unfold_less", "Collapse all (Ctrl+Up folds one)", () -> onEditor(Editor::collapseAll)),
+            tool("unfold_more", "Expand all (Ctrl+Down unfolds one)", () -> onEditor(Editor::expandAll)),
+            tool("code", "Markdown source or formatted view (Ctrl+E)", w::toggleSource),
             tool("settings", "Settings (F1)", () -> SettingsDialog.show(w)), sep(),
             slot);
         node.setAlignment(Pos.CENTER_LEFT);
@@ -43,16 +46,18 @@ final class AppBar {
         else slot.getChildren().setAll(toolbar);
     }
 
-    void zoomShown(double zoom, boolean override) {
-        zoomLabel.setText(Math.round(zoom * 100) + "%" + (override ? " •" : ""));
-        zoomLabel.setTooltip(new Tooltip(override ? "This window's zoom (click for options)" : "App zoom (click for options)"));
+    void zoomShown(double zoom, String level) {
+        zoomLabel.setText(Math.round(zoom * 100) + "%" + (level.equals("this file") ? " •" : ""));
+        zoomLabel.setTooltip(new Tooltip("Zoom of " + level + " (click for options)"));
     }
 
     ContextMenu zoomMenu() {
         return new ContextMenu(
-            FileMenu.item("Use the app zoom in this window", () -> w.area.windowZoom(null)),
+            FileMenu.item("This file: follow the window and app zoom", () -> w.area.setFileZoom(null)),
+            FileMenu.item("Use this zoom for the whole window", () -> w.area.windowZoom(w.area.zoom())),
+            FileMenu.item("Window: follow the app zoom", () -> w.area.windowZoom(null)),
             FileMenu.item("Make this zoom the app zoom", () -> w.area.makeAppZoom()),
-            FileMenu.item("Reset this window to 100%", () -> w.area.windowZoom(1.0)));
+            FileMenu.item("Reset this file to 100%", () -> w.area.setFileZoom(1.0)));
     }
 
     SplitMenuButton copy() {

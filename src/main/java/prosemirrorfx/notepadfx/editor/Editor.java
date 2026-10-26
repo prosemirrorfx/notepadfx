@@ -1,6 +1,6 @@
 package prosemirrorfx.notepadfx.editor;
 
-import java.util.List;
+import java.util.*;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
@@ -50,6 +50,16 @@ public interface Editor {
     boolean lineNumbersSupported();
 
     void lineNumbers(boolean on);
+
+    Set<String> folded();
+
+    void folded(Collection<String> keys);
+
+    ObservableValue<?> foldChanges();
+
+    void collapseAll();
+
+    void expandAll();
 
     void theme(boolean dark);
 

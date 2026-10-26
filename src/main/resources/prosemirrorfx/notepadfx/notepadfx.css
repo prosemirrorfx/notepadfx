@@ -123,7 +123,7 @@
 
 .tooltip { -fx-background-color: -np-side; -fx-text-fill: -np-text; -fx-font-size: 12px; }
 
-.np-appbar { -fx-background-color: -np-side; -fx-padding: 2 6 2 6; -fx-border-color: -np-line; -fx-border-width: 0 0 1 0; -fx-min-height: 32; }
+.np-appbar { -fx-background-color: -np-side; -fx-padding: 2 6 2 6; -fx-border-color: -np-line; -fx-border-width: 0 0 1 0; }
 .np-bar-button, .np-split > .label, .np-split > .arrow-button { -fx-background-color: transparent; -fx-background-radius: 5; -fx-padding: 3 5 3 5; -fx-cursor: hand; }
 .np-bar-button:hover, .np-split:hover > .label, .np-split:hover > .arrow-button { -fx-background-color: -np-hover; }
 .np-split { -fx-background-color: transparent; -fx-padding: 0; }

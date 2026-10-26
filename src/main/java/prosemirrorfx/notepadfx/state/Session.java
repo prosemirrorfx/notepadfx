@@ -12,6 +12,8 @@ public final class Session extends Session_A implements Json_I<Session> {
     Double zoom = 1.0;
     Boolean lineNumbers = false;
     Map<String, Integer> carets = new LinkedHashMap<>();
+    Map<String, Double> zooms = new LinkedHashMap<>();
+    Map<String, FoldState> folds = new LinkedHashMap<>();
     Boolean outlineBullets = true;
     Boolean outlineParagraphs = true;
 }
