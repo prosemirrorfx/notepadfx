@@ -3,9 +3,7 @@ package prosemirrorfx.notepadfx.editor;
 import java.util.List;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
 import javafx.scene.Node;
-import javafx.scene.input.*;
 import prosemirrorfx.notepadfx.toc.OutlineNode;
 import prosemirrorfx.view.*;
 import prosemirrorfx.view.embed.MarkdownEditor;
@@ -34,9 +32,9 @@ public final class ProseEditor implements Editor {
     @Override public int position() { return md.caret(); }
     @Override public void position(int pos) { md.setCaret(pos); }
     @Override public String where() { return ""; }
-    @Override public void cut() { key(KeyCode.X, false); }
-    @Override public void copy() { key(KeyCode.C, false); }
-    @Override public void paste(boolean plain) { key(KeyCode.V, plain); }
+    @Override public void cut() { md.cut(); md.focus(); }
+    @Override public void copy() { md.copy(); md.focus(); }
+    @Override public void paste(boolean plain) { if (plain) md.pastePlain(); else md.paste(); md.focus(); }
     @Override public void copyAll(Copy format) { md.view().copyAll(CopyFormat.valueOf(format.name())); }
     @Override public void zoom(double zoom) { if (md.view().zoom() != zoom) md.view().setZoom(zoom); }
     @Override public ObservableValue<Number> zoomChanges() { return md.view().zoomProperty(); }
@@ -55,11 +53,5 @@ public final class ProseEditor implements Editor {
     public void goTo(int pos) {
         md.setCaret(pos);
         md.focus();
-    }
-
-    // until the view exposes cut/copy/paste (requirements inbox R8), drive its own key bindings
-    void key(KeyCode code, boolean shift) {
-        md.focus();
-        Event.fireEvent(md.view(), new KeyEvent(null, md.view(), KeyEvent.KEY_PRESSED, "", "", code, shift, true, false, false));
     }
 }
