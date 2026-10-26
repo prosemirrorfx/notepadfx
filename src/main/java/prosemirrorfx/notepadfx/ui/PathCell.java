@@ -2,9 +2,11 @@ package prosemirrorfx.notepadfx.ui;
 
 import java.nio.file.*;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 
 final class PathCell extends TreeCell<Path> {
     final boolean workspaces;
+    final ImageView icon = FileIcon.view();
 
     PathCell(boolean workspaces) { this.workspaces = workspaces; }
 
@@ -13,11 +15,13 @@ final class PathCell extends TreeCell<Path> {
         super.updateItem(p, empty);
         getStyleClass().removeAll("np-dir", "np-file", "np-md", "np-ws", "np-open");
         if (empty) { setText(null); setGraphic(null); setTooltip(null); return; }
-        if (p == null) { setText("Other open files"); getStyleClass().add("np-ws"); return; }
+        if (p == null) { setText("Other open files"); setGraphic(null); getStyleClass().add("np-ws"); return; }
         var top = workspaces && getTreeItem().getParent() != null && getTreeItem().getParent().getParent() == null;
         setText(top ? label(p) : p.getFileName() == null ? p.toString() : p.getFileName().toString());
         getStyleClass().add(top ? "np-ws" : workspaces ? "np-open" : kind(p));
         setTooltip(new Tooltip(p.toString()));
+        FileIcon.show(icon, p, this::getItem);
+        setGraphic(icon);
     }
 
     static String label(Path p) {

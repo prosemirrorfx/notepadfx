@@ -22,6 +22,24 @@ final class Prompts {
         return files.stream().map(File::toPath).toList();
     }
 
+    static Path newFile(MainWindow w) {
+        var fc = new FileChooser();
+        fc.setTitle("New file");
+        var here = w.active.get() != null ? w.active.get().path.getParent() : w.state.project() != null ? Path.of(w.state.project()) : lastDir;
+        if (here != null && here.toFile().isDirectory()) fc.setInitialDirectory(here.toFile());
+        fc.setInitialFileName("untitled.md");
+        var f = fc.showSaveDialog(w.stage);
+        if (f == null) return null;
+        try {
+            if (!f.exists()) java.nio.file.Files.createFile(f.toPath());
+            lastDir = f.getParentFile().toPath();
+            return f.toPath();
+        } catch (Exception e) {
+            error(w, "Could not create " + f.getName(), e);
+            return null;
+        }
+    }
+
     static Path chooseDir(MainWindow w, String title) {
         var dc = new DirectoryChooser();
         dc.setTitle(title);

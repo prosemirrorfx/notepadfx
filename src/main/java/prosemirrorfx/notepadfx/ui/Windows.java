@@ -90,7 +90,6 @@ public final class Windows {
 
     static String theme() { return session.theme(); }
 
-    static double fontSize() { return session.fontSize(); }
 
     private Windows() {}
 }

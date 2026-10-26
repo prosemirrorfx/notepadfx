@@ -21,7 +21,7 @@ public final class MainWindow {
     final TabStrip tabs;
     final NavPanel nav;
     final TocPane toc;
-    final StackPane editorHost = new StackPane();
+    final EditorArea area;
     final SplitPane split = new SplitPane();
     final BorderPane root = new BorderPane();
 
@@ -30,8 +30,7 @@ public final class MainWindow {
         tabs = new TabStrip(this);
         nav = new NavPanel(this);
         toc = new TocPane(this);
-        editorHost.getStyleClass().add("np-editor-host");
-        editorHost.getChildren().setAll(Empty.view());
+        area = new EditorArea(this);
         root.getStyleClass().add("np-root");
         root.setLeft(Ribbon.build(this));
         root.setCenter(split);
@@ -47,7 +46,7 @@ public final class MainWindow {
         stage.setScene(scene);
         Icons.apply(stage);
         applyTheme();
-        stage.titleProperty().bind(active.map(d -> d.name() + " - notepadfx").orElse("notepadfx"));
+        stage.setTitle("notepadfx");
         stage.focusedProperty().subscribe(f -> { if (f) Windows.focused = this; });
         stage.setOnCloseRequest(e -> { if (!Prompts.confirmClose(this, tabs.docs())) e.consume(); else close(); });
         active.subscribe(this::activate);
@@ -78,20 +77,13 @@ public final class MainWindow {
         stage.toFront();
     }
 
-    void activate(Doc d) {
-        if (d == null) { editorHost.getChildren().setAll(Empty.view()); return; }
-        var ed = d.editor();
-        ed.fontSize(Windows.fontSize());
-        ed.theme("dark".equals(Windows.theme()));
-        editorHost.getChildren().setAll(ed.node());
-        ed.focus();
-    }
+    void activate(Doc d) { area.show(d); }
 
     void layoutPanes() {
         var items = new ArrayList<Node>();
         if (state.navVisible()) items.add(nav.node);
         items.add(tabs.node);
-        items.add(editorHost);
+        items.add(area.node);
         if (state.tocVisible()) items.add(toc.node);
         split.getItems().setAll(items);
         placeDividers();
@@ -129,11 +121,12 @@ public final class MainWindow {
         }
         state.files(new ArrayList<>(tabs.docs().stream().map(d -> d.path.toString()).toList()));
         state.activeFile(active.get() == null ? null : active.get().path.toString());
+        area.rememberCaret();
         return state;
     }
 
     void applyTheme() {
-        if (active.get() != null) active.get().editor().theme("dark".equals(Windows.theme()));
+        area.reapply();
         root.getStyleClass().removeAll("dark", "light");
         root.getStyleClass().add(Windows.theme());
     }
@@ -165,6 +158,11 @@ public final class MainWindow {
     void tearOffActive() {
         var d = active.get();
         if (d != null) Windows.tearOff(d, stage.getX() + 160, stage.getY() + 60);
+    }
+
+    void newFile() {
+        var p = Prompts.newFile(this);
+        if (p != null) Windows.open(p);
     }
 
     void openDialog() { Prompts.openFiles(this).forEach(Windows::open); }

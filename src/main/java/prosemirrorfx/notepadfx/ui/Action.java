@@ -6,6 +6,7 @@ import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.*;
 
 public enum Action {
+    SETTINGS(F1, "Settings", SettingsDialog::show),
     SAVE(F2, "Save", MainWindow::save),
     CLOSE(F4, "Close", MainWindow::closeActive),
     REFRESH(F5, "Refresh", MainWindow::refresh),

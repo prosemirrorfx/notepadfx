@@ -15,4 +15,5 @@ public final class WindowState extends WindowState_A implements Json_I<WindowSta
     String project;
     List<String> files = new ArrayList<>();
     String activeFile;
+    Double zoom;
 }

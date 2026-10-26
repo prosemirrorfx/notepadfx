@@ -7,7 +7,11 @@ import javafx.scene.Node;
 import prosemirrorfx.notepadfx.toc.OutlineNode;
 
 public interface Editor {
+    enum Copy { FORMATTED, HTML, MARKDOWN, PLAIN }
+
     Node node();
+
+    Node toolbar();
 
     String text();
 
@@ -23,11 +27,29 @@ public interface Editor {
 
     ObservableValue<Number> caret();
 
+    int position();
+
+    void position(int pos);
+
     void goTo(int anchor);
 
     String where();
 
-    void fontSize(double size);
+    void cut();
+
+    void copy();
+
+    void paste(boolean plain);
+
+    void copyAll(Copy format);
+
+    void zoom(double zoom);
+
+    ObservableValue<Number> zoomChanges();
+
+    boolean lineNumbersSupported();
+
+    void lineNumbers(boolean on);
 
     void theme(boolean dark);
 

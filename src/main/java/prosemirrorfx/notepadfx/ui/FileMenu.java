@@ -36,11 +36,16 @@ final class FileMenu {
             item("New file here", () -> create(w, sel.get(), false, refresh)),
             item("New folder here", () -> create(w, sel.get(), true, refresh)),
             item("Rename", () -> rename(w, sel.get(), refresh)),
+            item("Duplicate", () -> FileOps.duplicate(w, sel.get(), refresh)),
+            item("Move to...", () -> FileOps.move(w, sel.get(), refresh)),
             item("Move to recycle bin", () -> trash(w, sel.get(), refresh)),
             new SeparatorMenuItem(),
+            item("Open in the default app", () -> Shell.open(sel.get())),
+            item("Open with...", () -> Shell.openWith(sel.get())),
             item("Reveal in Explorer", () -> Shell.reveal(sel.get())),
             item("Terminal here", () -> Shell.terminal(sel.get())),
             item("Copy path", () -> Shell.copy(sel.get())),
+            item("Copy folder path", () -> { var p = sel.get(); if (p != null) Shell.copy(Files.isDirectory(p) ? p : p.getParent()); }),
             new SeparatorMenuItem(),
             item("Refresh", refresh));
     }

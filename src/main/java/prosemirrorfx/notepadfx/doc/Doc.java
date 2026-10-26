@@ -24,6 +24,11 @@ public final class Doc {
 
     public boolean hasEditor() { return editor != null; }
 
+    public String encoding() {
+        var f = file();
+        return "UTF-8" + (Boolean.TRUE.equals(f.bom()) ? " BOM" : "") + (Boolean.TRUE.equals(f.crlf()) ? "  CRLF" : "  LF");
+    }
+
     public Editor editor() {
         if (editor == null) {
             editor = markdown() ? new ProseEditor() : new TextEditor();

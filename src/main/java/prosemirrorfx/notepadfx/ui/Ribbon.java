@@ -14,6 +14,7 @@ final class Ribbon {
             button("⌂", "Add workspace folder", w.nav.workspaces::add),
             button("⧉", "New window (F10)", Windows::newWindow),
             spacer,
+            button("⚙","Settings (F1)", () -> SettingsDialog.show(w)),
             button("◐", "Light or dark (F11)", Windows::toggleTheme));
         box.getStyleClass().add("np-ribbon");
         return box;

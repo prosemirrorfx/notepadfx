@@ -13,7 +13,7 @@ final class Focus {
             stops.add(() -> w.nav.files.filter.requestFocus()); owners.add(w.nav.files.node);
         }
         stops.add(w.tabs::focus); owners.add(w.tabs.node);
-        stops.add(() -> { if (w.active.get() != null) w.active.get().editor().focus(); }); owners.add(w.editorHost);
+        stops.add(() -> { if (w.active.get() != null) w.active.get().editor().focus(); }); owners.add(w.area.node);
         if (w.state.tocVisible()) { stops.add(w.toc::focus); owners.add(w.toc.node); }
         var focused = w.stage.getScene().getFocusOwner();
         var at = -1;

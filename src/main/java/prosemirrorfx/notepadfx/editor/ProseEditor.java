@@ -3,9 +3,11 @@ package prosemirrorfx.notepadfx.editor;
 import java.util.List;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
 import javafx.scene.Node;
+import javafx.scene.input.*;
 import prosemirrorfx.notepadfx.toc.OutlineNode;
-import prosemirrorfx.view.Theme;
+import prosemirrorfx.view.*;
 import prosemirrorfx.view.embed.MarkdownEditor;
 
 public final class ProseEditor implements Editor {
@@ -14,6 +16,7 @@ public final class ProseEditor implements Editor {
         LIGHT = Theme.LIGHT.with("text", "#2e3338").with("code", "#5b21b6").with("link", "#0f766e").with("caret", "#0d9488");
     final MarkdownEditor md = new MarkdownEditor();
     final IntegerProperty caret = new SimpleIntegerProperty();
+    Node toolbar;
 
     public ProseEditor() {
         md.node().getStyleClass().add("np-prose");
@@ -28,14 +31,35 @@ public final class ProseEditor implements Editor {
     @Override public void onChange(Runnable listener) { md.onChange(listener); }
     @Override public List<OutlineNode> outline() { return ProseOutline.of(md.view().model().state().getDoc()); }
     @Override public ObservableValue<Number> caret() { return caret; }
+    @Override public int position() { return md.caret(); }
+    @Override public void position(int pos) { md.setCaret(pos); }
     @Override public String where() { return ""; }
-    @Override public void fontSize(double size) { md.view().setZoom(size / 15.0); }
-    @Override public void focus() { md.focus(); }
+    @Override public void cut() { key(KeyCode.X, false); }
+    @Override public void copy() { key(KeyCode.C, false); }
+    @Override public void paste(boolean plain) { key(KeyCode.V, plain); }
+    @Override public void copyAll(Copy format) { md.view().copyAll(CopyFormat.valueOf(format.name())); }
+    @Override public void zoom(double zoom) { if (md.view().zoom() != zoom) md.view().setZoom(zoom); }
+    @Override public ObservableValue<Number> zoomChanges() { return md.view().zoomProperty(); }
+    @Override public boolean lineNumbersSupported() { return true; }
+    @Override public void lineNumbers(boolean on) { md.view().setLineNumbers(on); }
     @Override public void theme(boolean dark) { md.view().setTheme(dark ? DARK : LIGHT); }
+    @Override public void focus() { md.focus(); }
+
+    @Override
+    public Node toolbar() {
+        if (toolbar == null) toolbar = md.toolbar();
+        return toolbar;
+    }
 
     @Override
     public void goTo(int pos) {
         md.setCaret(pos);
         md.focus();
+    }
+
+    // until the view exposes cut/copy/paste (requirements inbox R8), drive its own key bindings
+    void key(KeyCode code, boolean shift) {
+        md.focus();
+        Event.fireEvent(md.view(), new KeyEvent(null, md.view(), KeyEvent.KEY_PRESSED, "", "", code, shift, true, false, false));
     }
 }

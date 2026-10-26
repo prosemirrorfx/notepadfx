@@ -122,3 +122,23 @@
 .np-info { -fx-text-fill: -np-faint; -fx-font-size: 11px; }
 
 .tooltip { -fx-background-color: -np-side; -fx-text-fill: -np-text; -fx-font-size: 12px; }
+
+.np-appbar { -fx-background-color: -np-side; -fx-padding: 2 6 2 6; -fx-border-color: -np-line; -fx-border-width: 0 0 1 0; -fx-min-height: 32; }
+.np-bar-button, .np-split > .label, .np-split > .arrow-button { -fx-background-color: transparent; -fx-background-radius: 5; -fx-padding: 3 5 3 5; -fx-cursor: hand; }
+.np-bar-button:hover, .np-split:hover > .label, .np-split:hover > .arrow-button { -fx-background-color: -np-hover; }
+.np-split { -fx-background-color: transparent; -fx-padding: 0; }
+.np-split > .arrow-button > .arrow { -fx-background-color: -np-muted; -fx-padding: 2 3 2 3; }
+.np-glyph { -fx-fill: -np-muted; }
+.np-bar-button:hover .np-glyph, .np-split:hover .np-glyph { -fx-fill: -np-text; }
+.np-bar-sep { -fx-padding: 0 3 0 3; }
+.np-bar-sep .line { -fx-border-color: -np-line; -fx-border-width: 0 0 0 1; }
+.np-zoom { -fx-text-fill: -np-muted; -fx-font-size: 12px; -fx-padding: 2 6 2 6; -fx-cursor: hand; -fx-min-width: 54; -fx-alignment: center; }
+.np-zoom:hover { -fx-background-color: -np-hover; -fx-background-radius: 5; -fx-text-fill: -np-text; }
+.np-appbar .pm-toolbar { -fx-padding: 0 4 0 4; }
+.np-appbar .pm-tool, .np-appbar .pm-split > .label, .np-appbar .pm-split > .arrow-button { -fx-background-color: transparent; -fx-background-radius: 5; }
+.np-appbar .pm-tool:hover, .np-appbar .pm-tool:selected { -fx-background-color: -np-hover; }
+.np-appbar .pm-icon { -fx-fill: -np-muted; }
+.np-status .np-path { -fx-text-fill: -np-muted; }
+.context-menu { -fx-background-color: -np-side; -fx-border-color: -np-line; }
+.context-menu .menu-item .label { -fx-text-fill: -np-text; }
+.context-menu .menu-item:focused { -fx-background-color: -np-select; }

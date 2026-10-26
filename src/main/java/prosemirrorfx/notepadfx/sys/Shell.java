@@ -23,6 +23,17 @@ public final class Shell {
         Clipboard.getSystemClipboard().setContent(c);
     }
 
+    public static void open(Path p) {
+        if (p == null) return;
+        Thread.ofVirtual().start(() -> {
+            try { java.awt.Desktop.getDesktop().open(p.toFile()); } catch (Exception e) { System.err.println("notepadfx: open: " + e); }
+        });
+    }
+
+    public static void openWith(Path p) {
+        if (p != null) run("rundll32.exe", "shell32.dll,OpenAs_RunDLL", p.toString());
+    }
+
     public static boolean trash(Path p) {
         try {
             return java.awt.Desktop.isDesktopSupported() && java.awt.Desktop.getDesktop().moveToTrash(p.toFile());
