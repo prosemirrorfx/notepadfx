@@ -13,9 +13,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>25</maven.compiler.release>
-        <javafx.version>25.0.5</javafx.version>
+        <javafx.version>26.0.2</javafx.version>
         <datahelper.version>2.0</datahelper.version>
-        <main.class>io.github.prosemirrorfx.notepadfx.Main</main.class>
+        <main.class>prosemirrorfx.notepadfx.Main</main.class>
         <jrexe.skip>false</jrexe.skip>
     </properties>
 
@@ -24,6 +24,11 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.prosemirrorfx</groupId>
+            <artifactId>prosemirrorfx-view</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>io.github.luvml</groupId>
