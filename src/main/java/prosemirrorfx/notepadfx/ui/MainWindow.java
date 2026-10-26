@@ -82,6 +82,7 @@ public final class MainWindow {
         if (d == null) { editorHost.getChildren().setAll(Empty.view()); return; }
         var ed = d.editor();
         ed.fontSize(Windows.fontSize());
+        ed.theme("dark".equals(Windows.theme()));
         editorHost.getChildren().setAll(ed.node());
         ed.focus();
     }
@@ -132,6 +133,7 @@ public final class MainWindow {
     }
 
     void applyTheme() {
+        if (active.get() != null) active.get().editor().theme("dark".equals(Windows.theme()));
         root.getStyleClass().removeAll("dark", "light");
         root.getStyleClass().add(Windows.theme());
     }

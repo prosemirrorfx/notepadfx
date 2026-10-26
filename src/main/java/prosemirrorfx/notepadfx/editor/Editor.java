@@ -29,5 +29,7 @@ public interface Editor {
 
     void fontSize(double size);
 
+    void theme(boolean dark);
+
     void focus();
 }

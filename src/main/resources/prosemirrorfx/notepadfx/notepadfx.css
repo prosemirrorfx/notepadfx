@@ -122,18 +122,3 @@
 .np-info { -fx-text-fill: -np-faint; -fx-font-size: 11px; }
 
 .tooltip { -fx-background-color: -np-side; -fx-text-fill: -np-text; -fx-font-size: 12px; }
-
-/* prosemirrorfx view: until the view offers colour tokens (requirements inbox R7) */
-.np-root.dark { -np-code: #c4b5fd; -np-link: #5eead4; -np-active-line: #262b30; }
-.np-root.light { -np-code: #5b21b6; -np-link: #0f766e; -np-active-line: #f1f4f9; }
-.np-root .pm-scroll, .np-root .pm-scroll > .viewport { -fx-background-color: -np-bg; }
-.np-root .pm-text { -fx-fill: -np-text; }
-.np-root .pm-h6 .pm-text { -fx-fill: -np-muted; }
-.np-root .pm-marker { -fx-text-fill: -np-muted; }
-.np-root .pm-text.code { -fx-fill: -np-code; }
-.np-root .pm-text.link { -fx-fill: -np-link; }
-.np-root .pm-active-line { -fx-background-color: -np-active-line; }
-.np-root .pm-block-handle { -fx-text-fill: -np-faint; -fx-border-color: -np-line; }
-.np-root .pm-block-handle:hover { -fx-background-color: -np-hover; -fx-text-fill: -np-text; }
-.np-root .pm-find { -fx-background-color: -np-side; -fx-border-color: -np-line; }
-.np-root .pm-find .label, .np-root .pm-status { -fx-text-fill: -np-muted; }

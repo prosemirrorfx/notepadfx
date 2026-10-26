@@ -48,6 +48,7 @@ public final class TextEditor implements Editor {
     @Override public String where() { return "Ln " + (caretLine.get() + 1); }
     @Override public void fontSize(double size) { area.setStyle("-fx-font-size: " + size + "px;"); }
     @Override public void focus() { area.requestFocus(); }
+    @Override public void theme(boolean dark) {}
 
     @Override
     public void load(String text) {
