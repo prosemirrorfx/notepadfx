@@ -25,7 +25,7 @@ if (-not $DryRun) {
 
 Remove-Item -Recurse -Force $prev -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force $prev | Out-Null
-gh release download --repo prosemirrorfx/notepadfx --pattern notepadfx.update.json --dir $prev 2>gh release download --repo prosemirrorfx/notepadfx --pattern notepadfx.update.json --dir $prev 2>$null1 | Out-Null
+gh release download --repo prosemirrorfx/notepadfx --pattern notepadfx.update.json --dir $prev 2>&1 | Out-Null
 $merge = Join-Path $prev 'notepadfx.update.json'
 $mvnArgs = @('-q', '-DskipTests', '-Djr.source=url')
 if (Test-Path $merge) { $mvnArgs += "-Djr.updateMergeFrom=$merge" } else { Write-Host 'no earlier release: the update file starts with this one' }
