@@ -34,6 +34,8 @@ final class AppBar {
         node.setAlignment(Pos.CENTER_LEFT);
         node.setRowValignment(VPos.CENTER);
         node.getStyleClass().add("np-appbar");
+        node.setMinHeight(Region.USE_PREF_SIZE);
+        node.prefWrapLengthProperty().bind(node.widthProperty().subtract(14));
     }
 
     void editorToolbar(Node toolbar) {

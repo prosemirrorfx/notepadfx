@@ -28,6 +28,10 @@ final class SettingsDialog {
         grid.add(paras, 0, 5, 2, 1);
         grid.add(nav, 0, 6, 2, 1);
         grid.add(toc, 0, 7, 2, 1);
+        var check = new Button("Check for updates");
+        check.setMnemonicParsing(false);
+        check.setOnAction(e -> Updates.checkNow());
+        grid.addRow(8, new Label("Version " + Updates.version()), check);
 
         var d = new Dialog<ButtonType>();
         d.initOwner(w.stage);

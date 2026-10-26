@@ -9,11 +9,15 @@ A fast markdown and text editor for the desktop, in JavaFX.
 - Keyboard first: every action is on a function key, and the legend along the bottom is clickable.
 - Light and dark themes.
 
-The editor area currently edits plain text. It will move to the rich editor of the prosemirrorfx modules once those are published.
+Markdown files open in the prosemirrorfx editor (WYSIWYG, saved losslessly); other text files in a plain editor.
 
 ## Keys
 
 F2 save, F4 close tab, F5 refresh, F6 next pane, F7 files panes, F8 outline, F9 move tab to a new window, F10 new window, F11 theme, F12 open. Ctrl+Tab and Ctrl+PageUp/PageDown move between tabs.
+
+## Install and update
+
+Download `notepadfx.exe` from the latest release, then run `notepadfx install`: it goes to your user programs folder, on PATH, with Start Menu and Desktop shortcuts. `notepadfx update` updates it; the app also checks once a day and offers the update in its status bar.
 
 ## Build
 

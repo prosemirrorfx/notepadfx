@@ -13,7 +13,7 @@ import javafx.util.Duration;
 final class StatusBar {
     static final DateTimeFormatter WHEN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     final MainWindow w;
-    final Label info = new Label(), path = new Label();
+    final Label info = new Label(), path = new Label(), updateNotice = new Label();
     final FlowPane legend = new FlowPane(2, 0);
     final VBox node;
     final PauseTransition debounce = new PauseTransition(Duration.millis(400));
@@ -33,7 +33,16 @@ final class StatusBar {
         info.getStyleClass().add("np-info");
         path.getStyleClass().addAll("np-info", "np-path");
         path.setWrapText(true);
-        var top = new FlowPane(16, 0, info, path);
+        updateNotice.getStyleClass().addAll("np-info", "np-update");
+        updateNotice.textProperty().bind(Updates.NOTICE);
+        updateNotice.visibleProperty().bind(Updates.NOTICE.isNotEmpty());
+        updateNotice.managedProperty().bind(updateNotice.visibleProperty());
+        updateNotice.setOnMouseClicked(e -> Updates.clicked());
+        var top = new FlowPane(16, 0, updateNotice, info, path);
+        top.setMinHeight(Region.USE_PREF_SIZE);
+        top.prefWrapLengthProperty().bind(top.widthProperty());
+        legend.setMinHeight(Region.USE_PREF_SIZE);
+        legend.prefWrapLengthProperty().bind(legend.widthProperty());
         node = new VBox(1, top, legend);
         node.getStyleClass().add("np-status");
         debounce.setOnFinished(e -> refresh());

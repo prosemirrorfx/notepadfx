@@ -2,7 +2,7 @@ package prosemirrorfx.notepadfx;
 
 import prosemirrorfx.notepadfx.state.Store;
 import prosemirrorfx.notepadfx.sys.*;
-import prosemirrorfx.notepadfx.ui.Windows;
+import prosemirrorfx.notepadfx.ui.*;
 import java.util.List;
 import javafx.application.*;
 import javafx.stage.Stage;
@@ -26,6 +26,7 @@ public class App extends Application {
         Platform.runLater(() -> Timing.mark("first pulse"));
         Instance.serve(a -> Platform.runLater(() -> Windows.handle(a)));
         IdleTrim.start();
+        Updates.start();
     }
 
     @Override
