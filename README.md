@@ -17,7 +17,7 @@ Markdown files open in the prosemirrorfx editor (WYSIWYG, saved losslessly); oth
 
 ## Keys
 
-F2 save, F4 close tab, F5 refresh, F6 next pane, F7 files panes, F8 outline, F9 move tab to a new window, F10 new window, F11 theme, F12 open. Ctrl+Tab and Ctrl+PageUp/PageDown move between tabs.
+F2 save, F3 dictate (start, pause, resume), F4 close tab, F5 refresh, F6 next pane, F7 files panes, F8 outline, F9 read aloud from the caret or the selection, Shift+F9 move tab to a new window, F10 new window, F11 theme, F12 open. Esc stops reading or dictation. Ctrl+Tab and Ctrl+PageUp/PageDown move between tabs.
 
 ## Install and update
 
