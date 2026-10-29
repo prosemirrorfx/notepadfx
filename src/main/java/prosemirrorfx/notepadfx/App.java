@@ -32,6 +32,7 @@ public class App extends Application {
         Instance.serve(a -> Platform.runLater(() -> Windows.handle(a)));
         IdleTrim.start();
         Updates.start();
+        Updates.tuneStartup();
     }
 
     @Override

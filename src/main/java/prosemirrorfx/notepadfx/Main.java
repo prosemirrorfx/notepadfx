@@ -11,7 +11,7 @@ public class Main {
         if (args.length > 0 && command(args[0], args.length > 1 ? args[1] : "")) return;
         var list = List.of(args);
         var primary = Instance.primary();
-        if (!primary && Instance.handOff(list)) System.exit(0);
+        if (!primary && Instance.handOff(list)) { AotTraining.preload(); System.exit(0); }
         if (list.stream().anyMatch(a -> a.startsWith("--snapshot="))) {
             System.err.println("notepadfx: --snapshot needs a running notepadfx");
             System.exit(2);
@@ -21,6 +21,7 @@ public class Main {
     }
 
     static boolean command(String verb, String arg) {
+        if (List.of("install", "update", "uninstall", "explorer-menu", "--version", "version").contains(verb)) AotTraining.preload();
         switch (verb) {
             case "install" -> {
                 var r = Install.app("notepadfx").displayName("notepadfx")
