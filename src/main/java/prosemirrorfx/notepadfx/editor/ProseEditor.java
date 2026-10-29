@@ -54,6 +54,7 @@ public final class ProseEditor implements Editor {
     @Override public void focus() { md.focus(); }
     @Override public boolean dictate() { writer.dictate(); return true; }
     @Override public boolean read() { writer.read(); return true; }
+    @Override public boolean nextIssue() { writer.nextIssue(); return true; }
     @Override public boolean stopSpeech() { return writer.stop(); }
     @Override public void close() { writer.close(); }
 

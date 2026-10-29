@@ -70,6 +70,9 @@ public interface Editor {
 
     default boolean read() { return false; }
 
+    /** Spelling and grammar: on at the first call, then the next issue. False when this editor has none. */
+    default boolean nextIssue() { return false; }
+
     default boolean stopSpeech() { return false; }
 
     default void close() {}

@@ -19,7 +19,8 @@ public enum Action {
     WINDOW(F10, "New window", w -> Windows.newWindow()),
     THEME(F11, "Theme", w -> Windows.toggleTheme()),
     OPEN(F12, "Open", MainWindow::openDialog),
-    TEAR(F9, true, "Tab to window", MainWindow::tearOffActive);
+    TEAR(F9, true, "Tab to window", MainWindow::tearOffActive),
+    PROOF(F7, true, "Spelling", w -> w.onEditor(Editor::nextIssue));
 
     public final KeyCode key;
     public final boolean shift;
