@@ -11,6 +11,7 @@ public final class WindowState extends WindowState_A implements Json_I<WindowSta
     Boolean navVisible = true;
     Boolean tocVisible = true;
     Double navWidth = 300.0, tabsWidth = 210.0, tocWidth = 260.0;
+    List<Double> navSplit = new ArrayList<>(List.of(0.22, 0.48));
     String workspace;
     String project;
     List<String> files = new ArrayList<>();

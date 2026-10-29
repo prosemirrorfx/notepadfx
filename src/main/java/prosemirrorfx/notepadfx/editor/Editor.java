@@ -64,4 +64,13 @@ public interface Editor {
     void theme(boolean dark);
 
     void focus();
+
+    /** Dictation, read aloud and their stop; false where the editor has none (plain text). */
+    default boolean dictate() { return false; }
+
+    default boolean read() { return false; }
+
+    default boolean stopSpeech() { return false; }
+
+    default void close() {}
 }

@@ -19,6 +19,8 @@
         <datahelper.version>2.0</datahelper.version>
         <main.class>prosemirrorfx.notepadfx.Main</main.class>
         <jrexe.skip>false</jrexe.skip>
+        <native.opt>2</native.opt>
+        <reachability.version>1.0.0-RC5</reachability.version>
     </properties>
 
     <dependencies>
@@ -30,6 +32,11 @@
         <dependency>
             <groupId>io.github.prosemirrorfx</groupId>
             <artifactId>prosemirrorfx-view</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.prosemirrorfx</groupId>
+            <artifactId>prosemirrorfx-writer</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -58,6 +65,12 @@
             <version>${datahelper.version}</version>
         </dependency>
         <dependency>
+            <groupId>us.hebi.graalvm</groupId>
+            <artifactId>reachability-annotations</artifactId>
+            <version>${reachability.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.13.4</version>
@@ -79,7 +92,16 @@
                             <artifactId>datapotter-datahelper-processor</artifactId>
                             <version>${datahelper.version}</version>
                         </path>
+                        <path>
+                            <groupId>us.hebi.graalvm</groupId>
+                            <artifactId>reachability-processor</artifactId>
+                            <version>${reachability.version}</version>
+                        </path>
                     </annotationProcessorPaths>
+                    <compilerArgs>
+                        <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
+                        <arg>-Areachability.outputFormat=1.2.0</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -166,4 +188,57 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- Experimental: a GraalVM native image with JavaFX linked in statically (StaticFX).
+         Needs Oracle GraalVM 25 as JAVA_HOME and MSVC on PATH: see pkg/native-build.cmd. -->
+    <profiles>
+        <profile>
+            <id>native</id>
+            <properties>
+                <jrexe.skip>true</jrexe.skip>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>us.hebi.graalvm</groupId>
+                    <artifactId>jfx-static-feature</artifactId>
+                    <version>1.1.1</version>
+                </dependency>
+                <dependency>
+                    <groupId>us.hebi.graalvm</groupId>
+                    <artifactId>jfx-static-libs</artifactId>
+                    <version>${javafx.version}-1</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>1.1.17</version>
+                        <extensions>true</extensions>
+                        <executions>
+                            <execution>
+                                <id>build-native</id>
+                                <phase>package</phase>
+                                <goals><goal>compile-no-fork</goal></goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <imageName>notepadfx</imageName>
+                            <mainClass>${main.class}</mainClass>
+                            <fallback>false</fallback>
+                            <metadataRepository><enabled>false</enabled></metadataRepository>
+                            <buildArgs>
+                                <buildArg>-O${native.opt}</buildArg>
+                                <buildArg>--enable-native-access=ALL-UNNAMED</buildArg>
+                                <buildArg>-H:+ForeignAPISupport</buildArg>
+                                <buildArg>-H:+UnlockExperimentalVMOptions</buildArg>
+                            </buildArgs>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

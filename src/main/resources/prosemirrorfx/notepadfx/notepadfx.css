@@ -49,9 +49,11 @@
 
 .np-root .label, .np-root .text { -fx-text-fill: -np-text; }
 
-.split-pane { -fx-background-color: -np-line; -fx-padding: 0; -fx-background-insets: 0; }
-.split-pane > .split-pane-divider { -fx-background-color: -np-line; -fx-padding: 0 1 0 0; }
-.np-nav > .split-pane-divider { -fx-padding: 1 0 0 0; }
+/* Dividers: a thin visible line inside a grab area wide enough to hit (the line alone was 1 px and could hardly be dragged). */
+.split-pane { -fx-background-color: -np-side; -fx-padding: 0; -fx-background-insets: 0; }
+.split-pane > .split-pane-divider { -fx-background-color: -np-side, -np-line; -fx-background-insets: 0, 0 3 0 2; -fx-padding: 0 3 0 3; }
+.np-nav > .split-pane-divider { -fx-background-color: -np-side, -np-line; -fx-background-insets: 0, 3 0 2 0; -fx-padding: 3 0 3 0; }
+.split-pane > .split-pane-divider:hover { -fx-background-color: -np-side, -np-accent; }
 
 .np-ribbon { -fx-background-color: -np-ribbon; -fx-padding: 8 4 8 4; -fx-border-color: -np-line; -fx-border-width: 0 1 0 0; }
 .np-ribbon-button, .np-tool {
@@ -98,6 +100,13 @@
 .np-toc .np-h1 .np-toc-label { -fx-text-fill: -np-text; -fx-font-weight: bold; }
 .np-toc .np-h2 .np-toc-label, .np-toc .np-h3 .np-toc-label { -fx-text-fill: -np-text; }
 .np-toc .np-para .np-toc-label { -fx-text-fill: -np-faint; }
+.np-toc-number { -fx-text-fill: -np-faint; -fx-font-size: 11px; }
+.np-toc .np-context .np-toc-label { -fx-opacity: 0.55; }
+.np-kinds { -fx-padding: 0 6 4 6; }
+.np-kind { -fx-background-color: transparent; -fx-text-fill: -np-faint; -fx-font-size: 11px; -fx-padding: 1 5 1 5; -fx-background-radius: 3; }
+.np-kind:selected { -fx-background-color: -np-select; -fx-text-fill: -np-text; }
+.np-kind:hover { -fx-background-color: -np-hover; }
+.np-filter.np-bad { -fx-border-color: #d32f2f; }
 
 .np-editor-host { -fx-background-color: -np-bg; }
 .np-editor { -fx-background-color: -np-bg; -fx-text-fill: -np-text; -fx-highlight-fill: -np-select; -fx-highlight-text-fill: -np-text; -fx-font-family: "Segoe UI", "Nirmala UI", sans-serif; }

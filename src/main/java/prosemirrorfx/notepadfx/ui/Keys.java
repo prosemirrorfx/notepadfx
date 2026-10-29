@@ -8,7 +8,7 @@ import static javafx.scene.input.KeyCode.*;
 final class Keys {
     static void install(Scene scene, MainWindow w) {
         scene.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-            var a = e.isShortcutDown() || e.isAltDown() ? null : Action.of(e.getCode());
+            var a = e.isShortcutDown() || e.isAltDown() ? null : Action.of(e.getCode(), e.isShiftDown());
             if (a == null) a = combo(e);
             if (a != null) { a.run(w); e.consume(); return; }
             if (e.isShortcutDown() && !e.isShiftDown() && !e.isAltDown() && e.getCode() == E) { w.toggleSource(); e.consume(); return; }
@@ -16,6 +16,10 @@ final class Keys {
                 w.tabs.step(e.isShiftDown() || e.getCode() == PAGE_UP ? -1 : 1);
                 e.consume();
             }
+        });
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            var d = w.active.get();
+            if (e.getCode() == ESCAPE && !e.isConsumed() && d != null && d.hasEditor() && d.editor().stopSpeech()) e.consume();
         });
     }
 

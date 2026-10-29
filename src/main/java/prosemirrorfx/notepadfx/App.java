@@ -6,7 +6,12 @@ import prosemirrorfx.notepadfx.ui.*;
 import java.util.List;
 import javafx.application.*;
 import javafx.stage.Stage;
+import us.hebi.graalvm.reachability.annotations.Reachable;
 
+// Native image: the stylesheets and icon tables of notepadfx and the editor view.
+@Reachable(resources = {
+    "/prosemirrorfx/notepadfx/*.css", "/prosemirrorfx/notepadfx/*.tsv",
+    "/prosemirrorfx/view/*.css", "/prosemirrorfx/view/*.tsv"})
 public class App extends Application {
     static List<String> args = List.of();
 

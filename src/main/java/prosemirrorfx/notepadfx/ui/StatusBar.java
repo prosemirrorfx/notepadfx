@@ -23,7 +23,7 @@ final class StatusBar {
     StatusBar(MainWindow w) {
         this.w = w;
         for (var a : Action.values()) {
-            var b = new Button(a.key.getName() + " " + a.label);
+            var b = new Button(a.keyName() + " " + a.label);
             b.getStyleClass().add("np-legend");
             b.setFocusTraversable(false);
             b.setMnemonicParsing(false);

@@ -14,7 +14,10 @@ public final class Docs {
         return Optional.ofNullable(OPEN.get(p.toAbsolutePath().normalize()));
     }
 
-    public static void close(Doc d) { OPEN.remove(d.path); }
+    public static void close(Doc d) {
+        OPEN.remove(d.path);
+        if (d.hasEditor()) d.editor().close();
+    }
 
     private Docs() {}
 }

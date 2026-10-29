@@ -71,6 +71,12 @@ public final class Outline {
         return items;
     }
 
+    /** Sets each entry's source line number (from 1) from its anchor. */
+    public static List<OutlineNode> number(List<OutlineNode> nodes, java.util.function.IntUnaryOperator lineOf) {
+        for (var n : nodes) { n.number(lineOf.applyAsInt(n.line()) + 1); number(n.children(), lineOf); }
+        return nodes;
+    }
+
     public static OutlineNode node(String type, String label, int anchor) {
         return new OutlineNode().type(type).label(label).line(anchor);
     }

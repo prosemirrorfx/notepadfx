@@ -46,7 +46,7 @@ public final class TextEditor implements Editor {
     @Override public String text() { return area.getText(); }
     @Override public ReadOnlyBooleanProperty dirty() { return dirty.getReadOnlyProperty(); }
     @Override public void onChange(Runnable r) { area.textProperty().addListener((o, a, b) -> { if (!loading) r.run(); }); }
-    @Override public List<OutlineNode> outline() { return Outline.parse(text()); }
+    @Override public List<OutlineNode> outline() { return Outline.number(Outline.parse(text()), i -> i); }
     @Override public ObservableValue<Number> caret() { return caretLine; }
     @Override public int position() { return area.getCaretPosition(); }
     @Override public void position(int pos) { area.positionCaret(Math.min(pos, area.getLength())); }

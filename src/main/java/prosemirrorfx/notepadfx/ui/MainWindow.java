@@ -116,6 +116,7 @@ public final class MainWindow {
             if (!stage.isMaximized()) state.x(stage.getX()).y(stage.getY()).width(stage.getWidth()).height(stage.getHeight());
             state.maximized(stage.isMaximized());
             if (state.navVisible() && nav.node.getWidth() > 0) state.navWidth(nav.node.getWidth());
+            if (state.navVisible() && nav.node.getHeight() > 0) state.navSplit(new ArrayList<>(java.util.Arrays.stream(nav.node.getDividerPositions()).boxed().toList()));
             if (tabs.node.getWidth() > 0) state.tabsWidth(tabs.node.getWidth());
             if (state.tocVisible() && toc.node.getWidth() > 0) state.tocWidth(toc.node.getWidth());
         }
@@ -168,6 +169,8 @@ public final class MainWindow {
     void openDialog() { Prompts.openFiles(this).forEach(Windows::open); }
 
     void nextPane() { Focus.next(this); }
+
+    void onEditor(java.util.function.Consumer<prosemirrorfx.notepadfx.editor.Editor> act) { var d = active.get(); if (d != null) act.accept(d.editor()); }
 
     void toggleSource() {
         var d = active.get();

@@ -11,5 +11,6 @@ public final class OutlineNode extends OutlineNode_A {
     Integer rank;
     String label;
     Integer line;
+    Integer number;
     List<OutlineNode> children = new ArrayList<>();
 }

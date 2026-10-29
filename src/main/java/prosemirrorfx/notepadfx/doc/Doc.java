@@ -52,6 +52,7 @@ public final class Doc {
         var old = editor();
         var text = old.text();
         var at = CaretMap.index(old.outline(), old.caret().getValue().intValue());
+        old.close();
         source = !source;
         attach(source ? new TextEditor() : new ProseEditor(), text);
         CaretMap.restore(editor, at);

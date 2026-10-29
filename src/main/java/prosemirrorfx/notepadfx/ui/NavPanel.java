@@ -18,7 +18,8 @@ final class NavPanel {
         files = new FilePane(w, this);
         node.setOrientation(Orientation.VERTICAL);
         node.getItems().setAll(workspaces.node, projects.node, files.node);
-        node.setDividerPositions(0.22, 0.48);
+        var at = w.state.navSplit();
+        node.setDividerPositions(at != null && at.size() == 2 ? new double[]{at.get(0), at.get(1)} : new double[]{0.22, 0.48});
         node.getStyleClass().add("np-nav");
         node.setMinWidth(160);
     }
