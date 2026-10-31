@@ -42,6 +42,7 @@ public final class MainWindow {
         var scene = new Scene(root, state.width(), state.height());
         scene.getStylesheets().add(Theme.css());
         Keys.install(scene, this);
+        Drop.install(root);
         scene.addEventFilter(InputEvent.ANY, e -> IdleTrim.touch());
         stage.setScene(scene);
         Icons.apply(stage);
@@ -167,6 +168,8 @@ public final class MainWindow {
     }
 
     void openDialog() { Prompts.openFiles(this).forEach(Windows::open); }
+
+    void recent() { Recent.show(this); }
 
     void nextPane() { Focus.next(this); }
 

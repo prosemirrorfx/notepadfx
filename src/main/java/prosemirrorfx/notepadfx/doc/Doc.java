@@ -8,6 +8,8 @@ public final class Doc {
     public final Path path;
     public final BooleanProperty dirty = new SimpleBooleanProperty();
     public final IntegerProperty version = new SimpleIntegerProperty();
+    /** Completes when the document is closed (tab or window), for `--wait` callers such as an editor hook. */
+    public final java.util.concurrent.CompletableFuture<Void> closed = new java.util.concurrent.CompletableFuture<>();
     final BooleanProperty differsFromFile = new SimpleBooleanProperty();
     Editor editor;
     FileText loaded;

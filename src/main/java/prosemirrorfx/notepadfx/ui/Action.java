@@ -20,7 +20,8 @@ public enum Action {
     THEME(F11, "Theme", w -> Windows.toggleTheme()),
     OPEN(F12, "Open", MainWindow::openDialog),
     TEAR(F9, true, "Tab to window", MainWindow::tearOffActive),
-    PROOF(F7, true, "Spelling", w -> w.onEditor(Editor::nextIssue));
+    PROOF(F7, true, "Spelling", w -> w.onEditor(Editor::nextIssue)),
+    RECENT(F12, true, "Recent files", MainWindow::recent);
 
     public final KeyCode key;
     public final boolean shift;

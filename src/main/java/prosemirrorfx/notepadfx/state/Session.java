@@ -18,4 +18,5 @@ public final class Session extends Session_A implements Json_I<Session> {
     Boolean outlineParagraphs = true;
     List<String> outlineShow = new ArrayList<>(List.of("h1", "h2", "h3", "h4", "h5", "h6", "para", "b1", "b2", "b3"));
     String outlineFilter = "";
+    List<String> recent = new ArrayList<>();
 }

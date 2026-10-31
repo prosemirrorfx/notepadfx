@@ -20,6 +20,8 @@ final class SettingsDialog {
         var toc = check("Outline visible in this window (F8)", w.state.tocVisible());
         var menuWas = ExplorerMenu.present();
         var menu = check("\"Open with notepadfx\" in Explorer's right-click menu", menuWas);
+        var assocWas = FileAssoc.present();
+        var assoc = check("Open .md, .markdown and .txt files with notepadfx (Windows asks you to confirm once)", assocWas);
 
         var grid = new GridPane(12, 10);
         grid.setPadding(new Insets(16));
@@ -32,6 +34,7 @@ final class SettingsDialog {
         grid.add(nav, 0, 6, 2, 1);
         grid.add(toc, 0, 7, 2, 1);
         grid.add(menu, 0, 9, 2, 1);
+        grid.add(assoc, 0, 10, 2, 1);
         var check = new Button("Check for updates");
         check.setMnemonicParsing(false);
         check.setOnAction(e -> Updates.checkNow());
@@ -51,6 +54,10 @@ final class SettingsDialog {
             .outlineBullets(bullets.isSelected()).outlineParagraphs(paras.isSelected());
         if (themeChanged) Windows.toggleTheme();
         if (menu.isSelected() != menuWas) { if (menu.isSelected()) ExplorerMenu.add(InstallPath.installedOrRunning()); else ExplorerMenu.remove(); }
+        if (assoc.isSelected() != assocWas) {
+            if (!assoc.isSelected()) FileAssoc.remove();
+            else if (FileAssoc.add(InstallPath.installedOrRunning()) && !FileAssoc.isDefault()) FileAssoc.openDefaultAppsPage();
+        }
         if (nav.isSelected() != w.state.navVisible()) w.toggleNav();
         if (toc.isSelected() != w.state.tocVisible()) w.toggleToc();
         Windows.ALL.forEach(x -> { x.area.reapply(); x.toc.rebuild(); });

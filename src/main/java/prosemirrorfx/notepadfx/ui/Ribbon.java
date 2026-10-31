@@ -11,6 +11,7 @@ final class Ribbon {
             button("☰", "Files panes (F7)", w::toggleNav),
             button("≡", "Outline (F8)", w::toggleToc),
             button("⭳", "Open file (F12)", w::openDialog),
+            button("◷", "Recent files (Shift+F12)", w::recent),
             button("⌂", "Add workspace folder", w.nav.workspaces::add),
             button("⧉", "New window (F10)", Windows::newWindow),
             spacer,

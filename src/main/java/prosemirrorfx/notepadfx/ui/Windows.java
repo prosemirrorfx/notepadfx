@@ -4,11 +4,14 @@ import prosemirrorfx.notepadfx.doc.*;
 import prosemirrorfx.notepadfx.state.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import javafx.application.Platform;
 
 public final class Windows {
     static final List<MainWindow> ALL = new ArrayList<>();
     static Session session;
+    /** `--wait`: a private, throw-away instance for an editor hook. It reads the user's settings, never writes them, and ends when its file is closed. */
+    public static boolean standalone;
     static MainWindow focused;
 
     public static void start(Session s, List<String> args) {
@@ -17,6 +20,12 @@ public final class Windows {
         if (s.windows().isEmpty()) newWindow();
         else for (var ws : List.copyOf(s.windows())) open(ws);
         if (!args.isEmpty()) handle(args);
+        if (standalone) exitWhenClosed(args);
+    }
+
+    static void exitWhenClosed(List<String> args) {
+        var closed = args.stream().filter(a -> !a.startsWith("-")).map(Path::of).filter(Files::isRegularFile).map(f -> Docs.of(f).closed).toArray(CompletableFuture[]::new);
+        CompletableFuture.allOf(closed).thenRun(() -> Platform.runLater(Platform::exit));
     }
 
     public static void handle(List<String> args) {
@@ -24,7 +33,7 @@ public final class Windows {
         if (snap.isPresent()) { Snapshots.write(ALL, snap.get().substring(11)); return; }
         var files = args.stream().filter(a -> !a.startsWith("-")).map(Path::of).toList();
         var fresh = files.isEmpty() || args.contains("--new-window") ? newWindow() : null;
-        for (var f : files) { if (fresh != null && !Files.isDirectory(f)) fresh.show(Docs.of(f)); else open(f); }
+        for (var f : files) { if (fresh != null && !Files.isDirectory(f)) { remember(f); fresh.show(Docs.of(f)); } else open(f); }
         target().stage.toFront();
     }
 
@@ -49,9 +58,27 @@ public final class Windows {
             target().nav.workspaces.select(p.toAbsolutePath().normalize().toString());
             return;
         }
+        remember(p);
         var doc = Docs.of(p);
         var owner = windowOf(doc);
         (owner != null ? owner : target()).show(doc);
+    }
+
+    static final int RECENT_MAX = 100;
+
+    /** Newest first, one entry per file, kept in session.json. */
+    static void remember(Path p) {
+        var list = new ArrayList<>(session.recent());
+        var s = p.toAbsolutePath().normalize().toString();
+        list.remove(s);
+        list.addFirst(s);
+        session.recent(new ArrayList<>(list.subList(0, Math.min(list.size(), RECENT_MAX))));
+    }
+
+    static void forget(Path p) {
+        var list = new ArrayList<>(session.recent());
+        list.remove(p.toAbsolutePath().normalize().toString());
+        session.recent(list);
     }
 
     static MainWindow windowOf(Doc d) {
@@ -81,6 +108,7 @@ public final class Windows {
     }
 
     public static void persist() {
+        if (standalone) return;
         session.windows(new ArrayList<>(ALL.stream().map(MainWindow::snapshot).toList()));
         Workspaces.save(session);
         Store.save(session);
