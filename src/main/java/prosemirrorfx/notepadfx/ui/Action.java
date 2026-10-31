@@ -21,6 +21,8 @@ public enum Action {
     OPEN(F12, "Open", MainWindow::openDialog),
     TEAR(F9, true, "Tab to window", MainWindow::tearOffActive),
     PROOF(F7, true, "Spelling", w -> w.onEditor(Editor::nextIssue)),
+    PREV_COMMENT(F5, true, "Previous comment", w -> w.onEditor(e -> e.comment(-1))),
+    NEXT_COMMENT(F6, true, "Next comment", w -> w.onEditor(e -> e.comment(1))),
     RECENT(F12, true, "Recent files", MainWindow::recent);
 
     public final KeyCode key;

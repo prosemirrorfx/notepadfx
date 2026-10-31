@@ -23,6 +23,11 @@ final class SettingsDialog {
         var assocWas = FileAssoc.present();
         var assoc = check("Open .md, .markdown and .txt files with notepadfx (Windows asks you to confirm once)", assocWas);
 
+        var editor = new TextField(s.externalEditor());
+        editor.setPromptText(ExternalEditor.DEFAULT);
+        editor.setPrefColumnCount(26);
+        editor.setTooltip(new Tooltip("The program that \"Open in the other editor\" starts, with any arguments; the file is added at the end, or where {file} is written."));
+
         var grid = new GridPane(12, 10);
         grid.setPadding(new Insets(16));
         grid.addRow(0, new Label("Theme"), theme);
@@ -35,6 +40,7 @@ final class SettingsDialog {
         grid.add(toc, 0, 7, 2, 1);
         grid.add(menu, 0, 9, 2, 1);
         grid.add(assoc, 0, 10, 2, 1);
+        grid.addRow(11, new Label("Other editor"), editor);
         var check = new Button("Check for updates");
         check.setMnemonicParsing(false);
         check.setOnAction(e -> Updates.checkNow());
@@ -50,6 +56,7 @@ final class SettingsDialog {
         if (d.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
 
         var themeChanged = !theme.getValue().equals(s.theme());
+        s.externalEditor(editor.getText().isBlank() ? ExternalEditor.DEFAULT : editor.getText().strip());
         s.zoom(zoom.getValue() / 100.0).lineNumbers(lines.isSelected())
             .outlineBullets(bullets.isSelected()).outlineParagraphs(paras.isSelected());
         if (themeChanged) Windows.toggleTheme();

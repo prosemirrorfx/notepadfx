@@ -11,15 +11,30 @@ final class Prompts {
     static Path lastDir;
 
     static List<Path> openFiles(MainWindow w) {
-        var fc = new FileChooser();
-        fc.setTitle("Open");
-        if (lastDir != null) fc.setInitialDirectory(lastDir.toFile());
-        fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Markdown and text", "*.md", "*.markdown", "*.txt"),
-            new FileChooser.ExtensionFilter("All files", "*.*"));
-        var files = fc.showOpenMultipleDialog(w.stage);
-        if (files == null || files.isEmpty()) return List.of();
-        lastDir = files.getFirst().getParentFile().toPath();
-        return files.stream().map(File::toPath).toList();
+        try {
+            var fc = new FileChooser();
+            fc.setTitle("Open");
+            var start = startFolder(w);
+            if (start != null) fc.setInitialDirectory(start.toFile());
+            // all files first: a file of another kind (jsonl, java, log) must not be hidden by the default filter
+            fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All files", "*.*"),
+                new FileChooser.ExtensionFilter("Markdown and text", "*.md", "*.markdown", "*.txt"));
+            var files = fc.showOpenMultipleDialog(w.stage);
+            if (files == null || files.isEmpty()) return List.of();
+            lastDir = files.getFirst().getParentFile().toPath();
+            return files.stream().map(File::toPath).toList();
+        } catch (RuntimeException e) {
+            error(w, "Could not show the Open dialog", e);
+            return List.of();
+        }
+    }
+
+    /** Where the Open dialog starts: the last folder used, else the folder of the file being edited; never one that is gone (the dialog would fail to open). */
+    static Path startFolder(MainWindow w) {
+        var d = w.active.get();
+        for (var p : new Path[]{lastDir, d == null ? null : d.path.getParent()})
+            if (p != null && java.nio.file.Files.isDirectory(p)) return p;
+        return null;
     }
 
     static Path newFile(MainWindow w) {
@@ -51,6 +66,10 @@ final class Prompts {
 
     static void save(MainWindow w, Doc d) {
         if (d == null) return;
+        if (d.conflict()) {
+            if (!yes(w, "Overwrite the newer file?", d.name() + " was changed on disk after you started editing it. Saving replaces that text with yours.")) return;
+            d.keepMine();
+        }
         try { d.save(); } catch (Exception e) { error(w, "Could not save " + d.name(), e); }
     }
 

@@ -35,10 +35,11 @@ final class EditorArea {
         shown = d;
         title();
         if (d == null) { host.getChildren().setAll(Empty.view()); bar.editorToolbar(null); return; }
-        var fresh = !d.hasEditor();
+        var fresh = d.firstShow();
         var ed = d.editor();
         if (fresh) {
             ed.lineNumbers(Windows.session.lineNumbers());
+            ed.links(address -> OpenLinks.follow(d.path.getParent(), address));
             var caret = Windows.session.carets().get(d.path.toString());
             if (caret != null) ed.position(caret);
             Folds.restore(d);

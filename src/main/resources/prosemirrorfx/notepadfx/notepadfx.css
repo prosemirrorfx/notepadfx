@@ -52,7 +52,8 @@
 /* Dividers: a thin visible line inside a grab area wide enough to hit (the line alone was 1 px and could hardly be dragged). */
 .split-pane { -fx-background-color: -np-side; -fx-padding: 0; -fx-background-insets: 0; }
 .split-pane > .split-pane-divider { -fx-background-color: -np-side, -np-line; -fx-background-insets: 0, 0 3 0 2; -fx-padding: 0 3 0 3; }
-.np-nav > .split-pane-divider { -fx-background-color: -np-side, -np-line; -fx-background-insets: 0, 3 0 2 0; -fx-padding: 3 0 3 0; }
+/* A divider of a vertical SplitPane gets its thickness from the LEFT and RIGHT padding (JavaFX measures prefWidth for both orientations): with "3 0 3 0" it was laid out 0 px high and could not be grabbed. */
+.np-nav > .split-pane-divider { -fx-background-color: -np-side, -np-line; -fx-background-insets: 0, 3 0 2 0; -fx-padding: 3 3 3 3; }
 .split-pane > .split-pane-divider:hover { -fx-background-color: -np-side, -np-accent; }
 
 .np-ribbon { -fx-background-color: -np-ribbon; -fx-padding: 8 4 8 4; -fx-border-color: -np-line; -fx-border-width: 0 1 0 0; }

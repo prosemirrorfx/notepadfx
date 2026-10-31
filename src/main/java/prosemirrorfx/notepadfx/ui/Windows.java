@@ -16,6 +16,7 @@ public final class Windows {
 
     public static void start(Session s, List<String> args) {
         session = s;
+        DiskChanges.install();
         Workspaces.load(s);
         if (s.windows().isEmpty()) newWindow();
         else for (var ws : List.copyOf(s.windows())) open(ws);

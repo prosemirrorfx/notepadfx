@@ -13,7 +13,8 @@ import javafx.util.Duration;
 final class StatusBar {
     static final DateTimeFormatter WHEN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     final MainWindow w;
-    final Label info = new Label(), path = new Label(), updateNotice = new Label();
+    final Label info = new Label(), path = new Label(), updateNotice = new Label(), flash = new Label();
+    final PauseTransition flashOff = new PauseTransition(Duration.seconds(10));
     final FlowPane legend = new FlowPane(2, 0);
     final VBox node;
     final PauseTransition debounce = new PauseTransition(Duration.millis(400));
@@ -38,7 +39,12 @@ final class StatusBar {
         updateNotice.visibleProperty().bind(Updates.NOTICE.isNotEmpty());
         updateNotice.managedProperty().bind(updateNotice.visibleProperty());
         updateNotice.setOnMouseClicked(e -> Updates.clicked());
-        var top = new FlowPane(16, 0, updateNotice, info, path);
+        flash.getStyleClass().addAll("np-info", "np-update");
+        flash.setWrapText(true);
+        flash.setVisible(false);
+        flash.managedProperty().bind(flash.visibleProperty());
+        flashOff.setOnFinished(e -> flash.setVisible(false));
+        var top = new FlowPane(16, 0, flash, updateNotice, info, path);
         top.setMinHeight(Region.USE_PREF_SIZE);
         top.prefWrapLengthProperty().bind(top.widthProperty());
         legend.setMinHeight(Region.USE_PREF_SIZE);
@@ -47,6 +53,13 @@ final class StatusBar {
         node.getStyleClass().add("np-status");
         debounce.setOnFinished(e -> refresh());
         w.active.subscribe(this::attach);
+    }
+
+    /** A message in the status line for a few seconds. */
+    void flash(String text) {
+        flash.setText(text);
+        flash.setVisible(true);
+        flashOff.playFromStart();
     }
 
     void attach(Doc d) {

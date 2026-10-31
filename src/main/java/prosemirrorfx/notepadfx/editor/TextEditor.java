@@ -51,6 +51,26 @@ public final class TextEditor implements Editor {
     @Override public int position() { return area.getCaretPosition(); }
     @Override public void position(int pos) { area.positionCaret(Math.min(pos, area.getLength())); }
     @Override public String where() { return "Ln " + (caretLine.get() + 1); }
+
+    /** Lines starting `>>` (after any indent): the same comments the formatted view finds. */
+    @Override public boolean comment(int direction) {
+        var t = area.getText();
+        var starts = new ArrayList<Integer>();
+        for (var at = 0; at <= t.length(); ) {
+            var end = t.indexOf('\n', at) < 0 ? t.length() : t.indexOf('\n', at);
+            if (t.substring(at, end).stripLeading().startsWith(">>")) starts.add(at);
+            at = end + 1;
+        }
+        if (starts.isEmpty()) return false;
+        var here = area.getCaretPosition();
+        var lineStart = t.lastIndexOf('\n', Math.max(0, here - 1)) + 1;
+        var to = direction >= 0
+            ? starts.stream().filter(s -> s > here).findFirst().orElse(starts.getFirst())
+            : starts.reversed().stream().filter(s -> s < lineStart).findFirst().orElse(starts.getLast());
+        area.positionCaret(to);
+        area.requestFocus();
+        return true;
+    }
     @Override public void cut() { area.cut(); }
     @Override public void copy() { area.copy(); }
     @Override public void paste(boolean plain) { area.paste(); }

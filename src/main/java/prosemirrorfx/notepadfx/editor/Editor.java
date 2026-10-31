@@ -75,5 +75,14 @@ public interface Editor {
 
     default boolean stopSpeech() { return false; }
 
+    /** Next (direction > 0) or previous comment (a paragraph or line starting `>>`), wrapping around; false when there is none. */
+    default boolean comment(int direction) { return false; }
+
+    /** The folder that relative pictures in the text are read against. Called before load. */
+    default void baseDirectory(java.nio.file.Path dir) {}
+
+    /** What to do with an address followed in the text (Ctrl+click, Ctrl+Enter). Called once when the editor is first shown. */
+    default void links(java.util.function.Consumer<String> handler) {}
+
     default void close() {}
 }

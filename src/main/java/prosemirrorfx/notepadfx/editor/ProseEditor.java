@@ -56,6 +56,9 @@ public final class ProseEditor implements Editor {
     @Override public boolean read() { writer.read(); return true; }
     @Override public boolean nextIssue() { writer.nextIssue(); return true; }
     @Override public boolean stopSpeech() { return writer.stop(); }
+    @Override public boolean comment(int direction) { return md.jumpComment(direction); }
+    @Override public void baseDirectory(java.nio.file.Path dir) { md.setBaseDirectory(dir); }
+    @Override public void links(java.util.function.Consumer<String> handler) { md.view().setLinkHandler(handler); }
     @Override public void close() { writer.close(); }
 
     @Override

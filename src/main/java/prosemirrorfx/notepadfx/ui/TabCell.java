@@ -32,6 +32,7 @@ final class TabCell extends ListCell<Doc> {
         setOnDragDropped(e -> strip.dropped(e, isEmpty() ? strip.size() : getIndex()));
         setOnDragDone(this::dragDone);
         setOnMouseClicked(e -> { if (e.getButton() == MouseButton.MIDDLE && getItem() != null) closeDoc(getItem()); });
+        setOnContextMenuRequested(e -> { if (getItem() != null) { TabMenu.of(strip.w, getItem()).show(this, e.getScreenX(), e.getScreenY()); e.consume(); } });
     }
 
     void closeDoc(Doc d) {

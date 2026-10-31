@@ -22,6 +22,7 @@ public final class MainWindow {
     final NavPanel nav;
     final TocPane toc;
     final EditorArea area;
+    StatusBar status;
     final SplitPane split = new SplitPane();
     final BorderPane root = new BorderPane();
 
@@ -34,7 +35,8 @@ public final class MainWindow {
         root.getStyleClass().add("np-root");
         root.setLeft(Ribbon.build(this));
         root.setCenter(split);
-        root.setBottom(new StatusBar(this).node);
+        status = new StatusBar(this);
+        root.setBottom(status.node);
         SplitPane.setResizableWithParent(nav.node, false);
         SplitPane.setResizableWithParent(tabs.node, false);
         SplitPane.setResizableWithParent(toc.node, false);
@@ -48,7 +50,7 @@ public final class MainWindow {
         Icons.apply(stage);
         applyTheme();
         stage.setTitle("notepadfx");
-        stage.focusedProperty().subscribe(f -> { if (f) Windows.focused = this; });
+        stage.focusedProperty().subscribe(f -> { if (f) { Windows.focused = this; DiskWatch.checkAll(); } });
         stage.setOnCloseRequest(e -> { if (!Prompts.confirmClose(this, tabs.docs())) e.consume(); else close(); });
         active.subscribe(this::activate);
         restoreGeometry();

@@ -12,6 +12,8 @@ final class Ribbon {
             button("≡", "Outline (F8)", w::toggleToc),
             button("⭳", "Open file (F12)", w::openDialog),
             button("◷", "Recent files (Shift+F12)", w::recent),
+            button("«", "Previous comment, a >> paragraph (Shift+F5)", () -> w.onEditor(e -> e.comment(-1))),
+            button("»", "Next comment, a >> paragraph (Shift+F6)", () -> w.onEditor(e -> e.comment(1))),
             button("⌂", "Add workspace folder", w.nav.workspaces::add),
             button("⧉", "New window (F10)", Windows::newWindow),
             spacer,
