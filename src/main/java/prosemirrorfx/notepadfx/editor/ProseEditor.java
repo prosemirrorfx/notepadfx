@@ -63,7 +63,8 @@ public final class ProseEditor implements Editor {
 
     @Override
     public Node toolbar() {
-        if (toolbar == null) toolbar = new javafx.scene.layout.VBox(md.toolbar(), writer.bar());
+        // the app bar has these itself: the source button (Ctrl+E, which also brings the formatted view back) and Copy with "copy all as"
+        if (toolbar == null) toolbar = new javafx.scene.layout.VBox(md.toolbar(prosemirrorfx.view.EditorAction.SOURCE, prosemirrorfx.view.EditorAction.COPY_ALL), writer.bar());
         return toolbar;
     }
 

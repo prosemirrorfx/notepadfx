@@ -25,7 +25,7 @@ final class AppBar {
             tool("content_cut", "Cut (Ctrl+X)", () -> onEditor(Editor::cut)), copy(), paste(), sep(),
             tool("link", "Copy file path", () -> onDoc(d -> Shell.copy(d.path))),
             tool("drive_folder_upload", "Copy folder path", () -> onDoc(d -> Shell.copy(d.path.getParent()))),
-            tool("folder_open", "Show in Explorer", () -> onDoc(d -> Shell.reveal(d.path))),
+            tool("folder", "Show in Explorer", () -> onDoc(d -> Shell.reveal(d.path))),
             tool("terminal", "Terminal in this folder", () -> onDoc(d -> Shell.terminal(d.path))),
             tool("open_in_new", "Open in the default app", () -> onDoc(d -> Shell.open(d.path))), sep(),
             tool("remove", "Zoom out", () -> w.area.stepZoom(-1)), zoomLabel, tool("add", "Zoom in", () -> w.area.stepZoom(1)),

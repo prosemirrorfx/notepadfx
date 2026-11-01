@@ -109,4 +109,33 @@ class OpenFileTest {
             fx(() -> { Windows.session.lineNumbers(false); return null; });
         }
     }
+
+    /** Each action once: the editor's own source and copy-all buttons are left out, because the app bar has them. */
+    @Test void theToolbarHasNoRepeatedButtons(@org.junit.jupiter.api.io.TempDir Path dir) throws Exception {
+        var p = dir.resolve("bar.md");
+        Files.writeString(p, "# Bar\n\n| a | b |\n|---|---|\n| x | y |\n\ntext\n");
+        fx(() -> { Windows.open(p); return null; });
+        settle();
+        var tips = fx(() -> { var out = new java.util.ArrayList<String>(); tooltips(w.stage.getScene().getRoot(), out); return out; });
+        assertEquals(1, tips.stream().filter(t -> t.toLowerCase().contains("source")).count(), "source buttons: " + tips);
+        assertEquals(0, tips.stream().filter(t -> t.startsWith("Copy all")).count(), "the editor's Copy all: " + tips);
+        for (var want : java.util.List.of("Strikethrough", "Highlight", "Inline code", "Code block", "Table"))
+            assertTrue(tips.stream().anyMatch(t -> t.startsWith(want)), want + " missing: " + tips);
+        var shot = System.getProperty("shot");
+        if (shot != null) {
+            var img = fx(() -> { w.stage.setWidth(1200); w.stage.setHeight(520); w.root.applyCss(); w.root.layout(); return null; });
+            settle();
+            var snap = fx(() -> w.stage.getScene().snapshot(null));
+            int iw = (int) snap.getWidth(), ih = (int) snap.getHeight();
+            var out = new java.awt.image.BufferedImage(iw, ih, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+            var r = snap.getPixelReader();
+            for (var y = 0; y < ih; y++) for (var x = 0; x < iw; x++) out.setRGB(x, y, r.getArgb(x, y));
+            javax.imageio.ImageIO.write(out, "png", new java.io.File(shot));
+        }
+    }
+
+    static void tooltips(javafx.scene.Node n, java.util.List<String> out) {
+        if (n instanceof javafx.scene.control.Control c && c.getTooltip() != null && c.isVisible()) out.add(c.getTooltip().getText());
+        if (n instanceof javafx.scene.Parent p) for (var k : p.getChildrenUnmodifiable()) tooltips(k, out);
+    }
 }
