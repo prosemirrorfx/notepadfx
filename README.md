@@ -13,7 +13,7 @@ A fast markdown and text editor for the desktop, in JavaFX.
 - Keyboard first: every action is on a function key, and the legend along the bottom is clickable.
 - Light and dark themes.
 
-Markdown files open in the prosemirrorfx editor (WYSIWYG, saved losslessly); other text files in a plain editor.
+Markdown files open in the prosefx editor (WYSIWYG, saved losslessly); other text files in a plain editor.
 
 ## Keys
 
@@ -27,4 +27,4 @@ Download `notepadfx.exe` from the latest release, then run `notepadfx install`: 
 
 Java 25 and Maven. `mvn verify` builds `target/notepadfx.jar` and `target/jr/notepadfx.exe` (a jarrunner launcher with the JVM in-process and an AOT cache).
 
-State lives in `~/prosemirrorfx/notepadfx/session.json`.
+State lives in `~/prosefx/notepadfx/session.json`.

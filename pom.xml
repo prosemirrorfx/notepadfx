@@ -3,21 +3,21 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.github.prosemirrorfx</groupId>
-    <artifactId>prosemirrorfx-notepadfx</artifactId>
+    <groupId>io.github.prosefx</groupId>
+    <artifactId>prosefx-notepadfx</artifactId>
     <version>0.1.14</version>
     <packaging>jar</packaging>
     <name>notepadfx</name>
     <description>A fast markdown and text editor: workspaces, vertical tabs, navigation panes, outline.</description>
-    <url>https://github.com/prosemirrorfx/notepadfx</url>
-    <issueManagement><url>https://github.com/prosemirrorfx/notepadfx/issues</url></issueManagement>
+    <url>https://github.com/prosefx/notepadfx</url>
+    <issueManagement><url>https://github.com/prosefx/notepadfx/issues</url></issueManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>25</maven.compiler.release>
         <javafx.version>26.0.2</javafx.version>
         <datahelper.version>2.0</datahelper.version>
-        <main.class>prosemirrorfx.notepadfx.Main</main.class>
+        <main.class>prosefx.notepadfx.Main</main.class>
         <jrexe.skip>false</jrexe.skip>
         <native.opt>2</native.opt>
         <reachability.version>1.0.0-RC5</reachability.version>
@@ -30,13 +30,13 @@
             <version>${javafx.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.prosemirrorfx</groupId>
-            <artifactId>prosemirrorfx-view</artifactId>
+            <groupId>io.github.prosefx</groupId>
+            <artifactId>prosefx-view</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>io.github.prosemirrorfx</groupId>
-            <artifactId>prosemirrorfx-writer</artifactId>
+            <groupId>io.github.prosefx</groupId>
+            <artifactId>prosefx-writer</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -162,12 +162,12 @@
                     <skip>${jrexe.skip}</skip>
                     <name>notepadfx</name>
                     <icon>${project.basedir}/pkg/notepadfx.ico</icon>
-                    <jarUrl>https://github.com/prosemirrorfx/notepadfx/releases/download/v${project.version}/notepadfx-{sha8}.jar</jarUrl>
-                    <updateUrl>https://github.com/prosemirrorfx/notepadfx/releases/latest/download/notepadfx.update.json</updateUrl>
+                    <jarUrl>https://github.com/prosefx/notepadfx/releases/download/v${project.version}/notepadfx-{sha8}.jar</jarUrl>
+                    <updateUrl>https://github.com/prosefx/notepadfx/releases/latest/download/notepadfx.update.json</updateUrl>
                     <supportName>notepadfx</supportName>
                     <productName>notepadfx</productName>
-                    <companyName>prosemirrorfx</companyName>
-                    <copyright>prosemirrorfx contributors</copyright>
+                    <companyName>prosefx</companyName>
+                    <copyright>prosefx contributors</copyright>
                     <javaVersion>25+</javaVersion>
                     <jvmMode>dll</jvmMode>
                     <aot>true</aot>

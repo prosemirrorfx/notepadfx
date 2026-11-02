@@ -19,13 +19,13 @@ if (-not $DryRun) {
     if ($dirty) { throw "the working tree is not clean - commit first:`n$($dirty -join "`n")" }
     git fetch -q origin
     if ((Sha HEAD) -ne (Sha '@{u}')) { throw 'HEAD is not pushed - push first' }
-    gh release view $tag --repo prosemirrorfx/notepadfx 2>$null | Out-Null
+    gh release view $tag --repo prosefx/notepadfx 2>$null | Out-Null
     if ($LASTEXITCODE -eq 0) { throw "release $tag exists already - raise the version in pom.xml" }
 }
 
 Remove-Item -Recurse -Force $prev -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force $prev | Out-Null
-gh release download --repo prosemirrorfx/notepadfx --pattern notepadfx.update.json --dir $prev 2>&1 | Out-Null
+gh release download --repo prosefx/notepadfx --pattern notepadfx.update.json --dir $prev 2>&1 | Out-Null
 $merge = Join-Path $prev 'notepadfx.update.json'
 $mvnArgs = @('-q', '-DskipTests', '-Djr.source=url')
 if (Test-Path $merge) { $mvnArgs += "-Djr.updateMergeFrom=$merge" } else { Write-Host 'no earlier release: the update file starts with this one' }
@@ -35,10 +35,10 @@ Get-ChildItem $out | Select-Object Name, Length | Format-Table -AutoSize
 
 if ($DryRun) { Write-Host "dry run: release folder is $out"; return }
 $notes = "notepadfx $version. Install: download notepadfx.exe, then run ``notepadfx install``. Later: ``notepadfx update``. On first run the exe downloads its jar from this release and checks its sha256."
-gh release create $tag (Get-ChildItem $out -File).FullName --repo prosemirrorfx/notepadfx --target (Sha HEAD) --title "notepadfx $version" --notes $notes
+gh release create $tag (Get-ChildItem $out -File).FullName --repo prosefx/notepadfx --target (Sha HEAD) --title "notepadfx $version" --notes $notes
 if ($LASTEXITCODE -ne 0) { throw 'gh release create failed' }
 foreach ($f in Get-ChildItem $out -File) {
-    $url = "https://github.com/prosemirrorfx/notepadfx/releases/download/$tag/$($f.Name)"
+    $url = "https://github.com/prosefx/notepadfx/releases/download/$tag/$($f.Name)"
     $code = curl.exe -s -o NUL -w '%{http_code}' -L $url
     Write-Host "$code $url"
     if ($code -ne '200') { throw "asset not downloadable: $url" }

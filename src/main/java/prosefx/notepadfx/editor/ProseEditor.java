@@ -1,0 +1,76 @@
+package prosefx.notepadfx.editor;
+
+import java.util.*;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.Node;
+import prosefx.notepadfx.toc.*;
+import prosefx.view.*;
+import prosefx.view.embed.MarkdownEditor;
+import prosefx.writer.Writer;
+
+public final class ProseEditor implements Editor {
+    static final Theme
+        DARK = Theme.DARK.with("bg", "#1e1e1e").with("text", "#dcddde").with("code", "#c4b5fd").with("link", "#5eead4").with("active-line", "#262b30").with("caret", "#2dd4bf"),
+        LIGHT = Theme.LIGHT.with("text", "#2e3338").with("code", "#5b21b6").with("link", "#0f766e").with("caret", "#0d9488");
+    final MarkdownEditor md = new MarkdownEditor();
+    final Writer writer = new Writer(md);
+    final IntegerProperty caret = new SimpleIntegerProperty();
+    Node toolbar;
+
+    public ProseEditor() {
+        md.node().getStyleClass().add("np-prose");
+        md.view().model().onChange((old, now) -> caret.set(now.getSelection().getHead()));
+    }
+
+    @Override public Node node() { return md.node(); }
+    @Override public String text() { return md.getMarkdown(); }
+    @Override public void load(String text) { md.setMarkdown(text); caret.set(md.caret()); }
+    @Override public void markSaved() { md.markSaved(); }
+    @Override public ReadOnlyBooleanProperty dirty() { return md.dirtyProperty(); }
+    @Override public void onChange(Runnable listener) { md.onChange(listener); }
+    @Override public List<OutlineNode> outline() {
+        var map = md.sourceMap();
+        return Outline.number(ProseOutline.of(md.view().model().state().getDoc()), map::line);
+    }
+    @Override public ObservableValue<Number> caret() { return caret; }
+    @Override public int position() { return md.caret(); }
+    @Override public void position(int pos) { md.setCaret(pos); }
+    @Override public String where() { return ""; }
+    @Override public void cut() { md.cut(); md.focus(); }
+    @Override public void copy() { md.copy(); md.focus(); }
+    @Override public void paste(boolean plain) { if (plain) md.pastePlain(); else md.paste(); md.focus(); }
+    @Override public void copyAll(Copy format) { md.view().copyAll(CopyFormat.valueOf(format.name())); }
+    @Override public void zoom(double zoom) { if (md.view().zoom() != zoom) md.view().setZoom(zoom); }
+    @Override public ObservableValue<Number> zoomChanges() { return md.view().zoomProperty(); }
+    @Override public boolean lineNumbersSupported() { return true; }
+    @Override public void lineNumbers(boolean on) { md.view().setLineNumbers(on); }
+    @Override public Set<String> folded() { return md.folded(); }
+    @Override public void folded(Collection<String> keys) { md.setFolded(keys); }
+    @Override public ObservableValue<?> foldChanges() { return md.foldedProperty(); }
+    @Override public void collapseAll() { md.collapseAll(); }
+    @Override public void expandAll() { md.expandAll(); }
+    @Override public void theme(boolean dark) { md.view().setTheme(dark ? DARK : LIGHT); }
+    @Override public void focus() { md.focus(); }
+    @Override public boolean dictate() { writer.dictate(); return true; }
+    @Override public boolean read() { writer.read(); return true; }
+    @Override public boolean nextIssue() { writer.nextIssue(); return true; }
+    @Override public boolean stopSpeech() { return writer.stop(); }
+    @Override public boolean comment(int direction) { return md.jumpComment(direction); }
+    @Override public void baseDirectory(java.nio.file.Path dir) { md.setBaseDirectory(dir); }
+    @Override public void links(java.util.function.Consumer<String> handler) { md.view().setLinkHandler(handler); }
+    @Override public void close() { writer.close(); }
+
+    @Override
+    public Node toolbar() {
+        // the app bar has these itself: the source button (Ctrl+E, which also brings the formatted view back) and Copy with "copy all as"
+        if (toolbar == null) toolbar = new javafx.scene.layout.VBox(md.toolbar(prosefx.view.EditorAction.SOURCE, prosefx.view.EditorAction.COPY_ALL), writer.bar());
+        return toolbar;
+    }
+
+    @Override
+    public void goTo(int pos) {
+        md.setCaret(pos);
+        md.focus();
+    }
+}
