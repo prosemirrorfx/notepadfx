@@ -151,7 +151,7 @@
             <plugin>
                 <groupId>io.github.jarrunner</groupId>
                 <artifactId>jr-maven-plugin</artifactId>
-                <version>1.4.0</version>
+                <version>1.5.0</version>
                 <executions>
                     <execution>
                         <phase>verify</phase>
@@ -171,6 +171,15 @@
                     <javaVersion>25+</javaVersion>
                     <jvmMode>dll</jvmMode>
                     <aot>true</aot>
+                    <!-- PRP-61: what notepadfx needs from macOS, said up front; each sentence is what the person reads when macOS asks -->
+                    <macosPermissions>
+                        <microphone>notepadfx listens to your microphone only when you press F3 to dictate.</microphone>
+                        <documents>notepadfx opens and saves the notes and documents you choose in Documents.</documents>
+                        <desktop>notepadfx opens and saves the notes and documents you choose on the Desktop.</desktop>
+                        <downloads>notepadfx opens and saves the files you choose in Downloads.</downloads>
+                        <removableVolumes>notepadfx opens and saves files on drives you choose.</removableVolumes>
+                        <networkVolumes>notepadfx opens and saves files on network drives you choose.</networkVolumes>
+                    </macosPermissions>
                     <vmArgs>
                         <vmArg>-Xms16m</vmArg>
                         <vmArg>-Xmx512m</vmArg>
