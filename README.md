@@ -19,6 +19,10 @@ Markdown files open in the prosefx editor (WYSIWYG, saved losslessly); other tex
 
 F2 save, F3 dictate (start, pause, resume), F4 close tab, F5 refresh, F6 next pane, F7 files panes, Shift+F7 spelling and grammar (on, then next issue), F8 outline, F9 read aloud from the caret or the selection, Shift+F9 move tab to a new window, F10 new window, F11 theme, F12 open. Esc stops reading or dictation. Ctrl+Tab and Ctrl+PageUp/PageDown move between tabs.
 
+## Command line, for people and AI sessions
+
+`notepadfx <file>:<line>` opens a file and selects that line; `notepadfx --help` lists everything. A coding session can read and change the live text of an open file together with the person typing in it (`read`, `append`, `insert`, `replace`), or take exclusive right over a file it opened (`close`, write, open again). See [docs/agents.md](docs/agents.md).
+
 ## Install and update
 
 Download `notepadfx.exe` from the latest release, then run `notepadfx install`: it goes to your user programs folder, on PATH, with Start Menu and Desktop shortcuts. `notepadfx update` updates it; the app also checks once a day and offers the update in its status bar. Install also adds "Open with notepadfx" to Explorer's right-click menu for files and folders; `notepadfx explorer-menu off` (or Settings) removes it.

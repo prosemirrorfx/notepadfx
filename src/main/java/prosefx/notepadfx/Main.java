@@ -2,6 +2,7 @@ package prosefx.notepadfx;
 
 import jarrunner.jr.apputils.*;
 import java.util.List;
+import prosefx.notepadfx.agent.*;
 import prosefx.notepadfx.sys.*;
 import prosefx.notepadfx.ui.Windows;
 
@@ -9,8 +10,11 @@ public class Main {
     public static void main(String[] args) {
         Timing.mark("main");
         Timing.jvm();
+        if (args.length > 0 && AgentCli.handles(args[0])) System.exit(AgentCli.run(List.of(args)));
         if (args.length > 0 && command(args[0], args.length > 1 ? args[1] : "")) return;
-        var list = List.of(args);
+        var list = OpenArgs.normalize(List.of(args));
+        if (!list.contains("--wait") && OpenArgs.wantsAnswer(list) && askRunning(list)) return;
+        args = list.toArray(String[]::new);
         // --wait (an editor hook such as Ctrl+G in claude-code): its own process, never handed to a running notepadfx, ends when its file is closed
         if (list.contains("--wait")) { Windows.standalone = true; App.launchWith(args); System.exit(0); }
         var primary = Instance.primary();
@@ -21,6 +25,14 @@ public class Main {
         }
         App.launchWith(args);
         System.exit(0);
+    }
+
+    /** `file:line` and `--owner` want to hear whether the file and line were there: ask the running notepadfx; false when none runs, and the launch carries on. */
+    static boolean askRunning(List<String> list) {
+        var code = AgentCli.open(list);
+        if (code == Exit.NOT_RUNNING) return false;
+        System.exit(code);
+        return true;
     }
 
     static boolean command(String verb, String arg) {

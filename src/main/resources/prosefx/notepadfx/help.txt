@@ -1,0 +1,35 @@
+notepadfx - a fast markdown and text editor. Command line for people and for AI sessions.
+
+Open
+  notepadfx <file>                      open a file (hands it to the running notepadfx)
+  notepadfx <file>:<line>[:<col>]       open it and select that line; --line N [--end-line M] selects lines N to M
+  notepadfx --owner <name> <file>       say who you are: the session that opens a file may close it later
+  notepadfx --new-window <file>         open it in a new window
+
+Ask the running notepadfx (all need one running; one fact per line, or --json)
+  notepadfx files                       the open files
+  notepadfx status <file>               file, open, owner, unsaved, version, lines, conflict
+  notepadfx read <file> [--lines 5-9]   the live text, including what the person has typed and not saved
+
+Change the live text (nothing is written to the file; the person sees it in the editor, it is one undo step, the caret stays)
+  notepadfx append <file> --text-stdin
+  notepadfx insert <file> --after-heading "## Questions" --text-stdin
+  notepadfx insert <file> --after-line 12 --expect "<text of line 12>" --text-stdin
+  notepadfx replace <file> --lines 12-14 --expect-file old.txt --text-file new.txt
+    text:    --text "..." | --text-file <path> | --text-stdin
+    expect:  --expect "..." | --expect-file <path>   the text you saw there; if it moved, nothing changes (exit 5): read again and retry
+    --version N                         refuse unless the text is still at the version `read` gave you
+
+Close (the exclusive route: close, write to the file on disk, then open it again at a line)
+  notepadfx close <file> --owner <name>   the owner closes its own file when nothing is unsaved
+  Anyone else, and any file with unsaved changes, puts a question to the person: Enter agrees (Save when unsaved), F9 closes without saving, Esc keeps it open.
+    --no-ask                            never ask: exit 6 when unsaved, 4 when not the owner
+    --timeout <seconds>                 how long to wait for the person (default 120)
+
+Exit codes
+  0 done   1 error or bad usage   2 notepadfx is not running   3 file not open   4 refused by the person
+  5 stale, nothing changed   6 unsaved changes   7 the person did not answer in time   8 no such file or line
+
+Other
+  notepadfx --wait <file>               its own window, ends when the file is closed (an editor hook)
+  notepadfx --version | update | install | uninstall | explorer-menu [off] | association [off]

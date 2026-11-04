@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.*;
 import javafx.scene.layout.Region;
+import prosefx.notepadfx.agent.Lines;
 import prosefx.notepadfx.toc.*;
 
 public final class TextEditor implements Editor {
@@ -106,6 +107,30 @@ public final class TextEditor implements Editor {
         markSaved();
         area.positionCaret(0);
         area.setScrollTop(0);
+    }
+
+    @Override
+    public void replaceText(String text) {
+        var d = new TextDiff(area.getText(), text);
+        var anchor = d.map(area.getAnchor());
+        var caret = d.map(area.getCaretPosition());
+        var top = area.getScrollTop();
+        area.replaceText(d.from, d.oldEnd, text.substring(d.from, d.newEnd));
+        area.selectRange(anchor, caret);
+        area.setScrollTop(top);
+    }
+
+    @Override
+    public boolean selectLines(int from, int to) {
+        var t = area.getText();
+        if (from < 1 || from > Lines.count(t)) return false;
+        var end = Lines.start(t, Math.min(to, Lines.count(t)) + 1);
+        area.selectRange(Lines.start(t, from), end > 0 && t.charAt(end - 1) == '\n' ? end - 1 : end);
+        var content = area.lookup(".content");
+        var height = content == null ? 0 : content.getBoundsInLocal().getHeight();
+        area.setScrollTop(Math.max(0, (double) (from - 1) / Math.max(1, Lines.count(t)) * height - 80));
+        area.requestFocus();
+        return true;
     }
 
     @Override

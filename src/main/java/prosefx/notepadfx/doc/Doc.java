@@ -34,6 +34,13 @@ public final class Doc {
 
     public boolean hasEditor() { return editor != null; }
 
+    /** Who opened this file from the command line (`--owner`), or null when a person opened it. Only the owner may close it without being asked about it. */
+    String owner;
+
+    public String owner() { return owner; }
+
+    public void owner(String name) { owner = name; }
+
     public String encoding() {
         var f = file();
         return "UTF-8" + (Boolean.TRUE.equals(f.bom()) ? " BOM" : "") + (Boolean.TRUE.equals(f.crlf()) ? "  CRLF" : "  LF");

@@ -4,6 +4,7 @@ import java.util.*;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
+import prosefx.notepadfx.agent.Lines;
 import prosefx.notepadfx.toc.*;
 import prosefx.view.*;
 import prosefx.view.embed.MarkdownEditor;
@@ -27,6 +28,20 @@ public final class ProseEditor implements Editor {
     @Override public String text() { return md.getMarkdown(); }
     @Override public void load(String text) { md.setMarkdown(text); caret.set(md.caret()); }
     @Override public void markSaved() { md.markSaved(); }
+    @Override public void replaceText(String text) { BlockDiff.apply(md, text); }
+
+    @Override
+    public boolean selectLines(int from, int to) {
+        var text = md.getMarkdown();
+        var n = Lines.count(text);
+        if (from < 1 || from > n) return false;
+        var last = Math.min(to, n);
+        var map = md.sourceMap();
+        var end = Lines.chomp(Lines.slice(text, last, last)).length();
+        md.selectRange(map.docPosition(from - 1, 0), Math.max(map.docPosition(from - 1, 0), map.docPosition(last - 1, end)));
+        md.focus();
+        return true;
+    }
     @Override public ReadOnlyBooleanProperty dirty() { return md.dirtyProperty(); }
     @Override public void onChange(Runnable listener) { md.onChange(listener); }
     @Override public List<OutlineNode> outline() {

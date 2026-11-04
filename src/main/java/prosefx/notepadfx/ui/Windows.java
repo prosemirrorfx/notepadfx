@@ -34,7 +34,11 @@ public final class Windows {
         if (snap.isPresent()) { Snapshots.write(ALL, snap.get().substring(11)); return; }
         var files = args.stream().filter(a -> !a.startsWith("-")).map(Path::of).toList();
         var fresh = files.isEmpty() || args.contains("--new-window") ? newWindow() : null;
-        for (var f : files) { if (fresh != null && !Files.isDirectory(f)) { remember(f); fresh.show(Docs.of(f)); } else open(f); }
+        for (var f : files) {
+            var was = Docs.find(f).isPresent();
+            if (fresh != null && !Files.isDirectory(f)) { remember(f); fresh.show(Docs.of(f)); } else open(f);
+            AgentOpen.after(f.toAbsolutePath().normalize(), was, args);
+        }
         target().stage.toFront();
     }
 

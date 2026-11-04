@@ -19,6 +19,12 @@ public interface Editor {
 
     void markSaved();
 
+    /** Makes the text this, as one undo step, changing only what differs and keeping the caret and selection where they were. For a change made by an AI session through the command line. */
+    void replaceText(String text);
+
+    /** Selects lines from..to (from 1, inclusive, in the text as saved) and brings them into view; false when the text has no line from. */
+    boolean selectLines(int from, int to);
+
     ReadOnlyBooleanProperty dirty();
 
     void onChange(Runnable listener);
